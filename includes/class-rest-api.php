@@ -146,7 +146,7 @@ class RestAPI
                     ], 404);
                 }
 
-                $order->add_product($product, $item['quantity']);
+                $order->add_product($product, 1);
             }
 
             // Billing

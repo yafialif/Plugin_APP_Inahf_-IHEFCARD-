@@ -23,9 +23,6 @@ class Menu
             5                             // Position
         );
 
-
-
-
     public function dashboard()
         {
     ?>

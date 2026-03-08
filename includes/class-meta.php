@@ -15,4 +15,9 @@ class Meta
 
     }
 
+     public function save_meta($post_id)
+    {
+
+    }
+
 }

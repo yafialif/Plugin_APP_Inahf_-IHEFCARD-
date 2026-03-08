@@ -18,6 +18,93 @@ class RestAPI
             'callback' => [$this, 'custom_create_order_midtrans'],
             'permission_callback' => '__return_true'
         ]);
+
+        register_rest_route('package/v1', '/check-status', [
+            'methods'  => 'POST',
+            'callback' => [$this, 'check_status_order'],
+            'permission_callback' => '__return_true'
+        ]);
+    }
+
+    public function check_status_order($request)
+    {
+        $params = $request->get_json_params();
+
+        $order_id  = sanitize_text_field($params['order_id'] ?? '');
+
+        $order = wc_get_order($order_id);
+
+        if(!$order){
+            return [
+                'status' => false,
+                'message' => 'Order tidak ditemukan'
+            ];
+        }
+
+        // cek apakah order sudah dibayar
+        if($order->is_paid()){
+            return [
+                'status' => true,
+                'message' => 'Order sudah dibayar',
+                'order_status' => $order->get_status()
+            ];
+        }
+
+        // cek apakah snap token sudah ada
+        $snap_token = $order->get_meta('_midtrans_snap_token');
+        $redirect_url = $order->get_meta('_midtrans_redirect_url');
+
+        if($snap_token && $redirect_url){
+            return [
+                'status' => true,
+                'message' => 'Payment masih pending',
+                'snap_token' => $snap_token,
+                'payment_url' => $redirect_url
+            ];
+        }
+
+        // jika belum ada snap token → buat transaksi snap baru
+        try{
+
+            $params = [
+                'transaction_details' => [
+                    'order_id' => $order->get_id(),
+                    'gross_amount' => (int) $order->get_total(),
+                ],
+                'customer_details' => [
+                    'first_name' => $order->get_billing_first_name(),
+                    'last_name' => $order->get_billing_last_name(),
+                    'email' => $order->get_billing_email(),
+                    'phone' => $order->get_billing_phone(),
+                ],
+            ];
+
+            $snap = \WC_Midtrans_API::createSnapTransactionHandleDuplicate(
+                $order,
+                $params,
+                'midtrans'
+            );
+
+            // simpan token
+            $order->update_meta_data('_midtrans_snap_token', $snap->token);
+            $order->update_meta_data('_midtrans_redirect_url', $snap->redirect_url);
+            $order->save();
+
+            return [
+                'status' => true,
+                'message' => 'Snap payment dibuat',
+                'snap_token' => $snap->token,
+                'payment_url' => $snap->redirect_url
+            ];
+
+        }catch(Exception $e){
+
+            return [
+                'status' => false,
+                'message' => $e->getMessage()
+            ];
+
+        }
     }
 
     public function custom_create_order_midtrans($request)

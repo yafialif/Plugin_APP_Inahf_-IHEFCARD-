@@ -62,6 +62,7 @@ class RestAPI
             $order->save();
 
             $order_id = $order->get_id();
+            $order_key = $order->get_order_key();
 
             // Load gateways
             WC()->payment_gateways();
@@ -86,6 +87,11 @@ class RestAPI
                     "last_name" => $data['billing']['last_name'],
                     "email" => $data['billing']['email'],
                     "phone" => $data['billing']['phone']
+                ],
+                'callbacks' = [
+                    "finish" => "https://ihefcard.inahfcarmet.org/checkout/order-received/".$order_id."/?key=".$order_key,
+                    "unfinish" => "https://ihefcard.inahfcarmet.org/checkout/order-pay/".$order_id."/?pay_for_order=true&key=".$order_key,
+                    "error" => "https://ihefcard.inahfcarmet.org/checkout/order-pay/".$order_id."/?pay_for_order=true&key=".$order_key
                 ]
             ];
 

@@ -76,12 +76,31 @@ class RestAPI
             $midtrans = $gateways['midtrans'];
 
             // Create payment
-            $result = $midtrans->process_payment($order_id);
+            $params = [
+                "transaction_details" => [
+                    "order_id" => (string)$order->get_id(),
+                    "gross_amount" => (int)$order->get_total()
+                ],
+                "customer_details" => [
+                    "first_name" => $data['billing']['first_name'],
+                    "last_name" => $data['billing']['last_name'],
+                    "email" => $data['billing']['email'],
+                    "phone" => $data['billing']['phone']
+                ]
+            ];
+
+            $snap = \WC_Midtrans_API::createSnapTransactionHandleDuplicate(
+                $order,
+                $params,
+                'midtrans'
+            );
+
+            $payment_url = $snap->redirect_url;
 
             return [
                 "success" => true,
-                "order_id" => $order_id,
-                "payment_url" => $result['redirect']
+                "order_id" => $order->get_id(),
+                "payment_url" => $payment_url
             ];
 
         } catch (\Exception $e) {

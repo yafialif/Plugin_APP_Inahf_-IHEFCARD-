@@ -89,7 +89,8 @@ class RestAPI
                     "phone" => $data['billing']['phone']
                 ],
                 "callbacks" => [
-                    "finish" => "https://ihefcard.inahfcarmet.org/checkout/order-received/".$order_id."/?key=".$order_key,
+                    // "finish" => "https://ihefcard.inahfcarmet.org/checkout/order-received/".$order_id."/?key=".$order_key,
+                    "finish"=>"inahf://payment/success?orderId=".$order_id,
                     "unfinish" => "https://ihefcard.inahfcarmet.org/checkout/order-pay/".$order_id."/?pay_for_order=true&key=".$order_key,
                     "error" => "https://ihefcard.inahfcarmet.org/checkout/order-pay/".$order_id."/?pay_for_order=true&key=".$order_key
                 ]

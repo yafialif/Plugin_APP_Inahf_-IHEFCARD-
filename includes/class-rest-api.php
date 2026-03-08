@@ -50,8 +50,8 @@ class RestAPI
         // cek apakah order sudah dibayar
         if($order->is_paid()){
             return [
-                'status' => true,
-                'message' => 'Order sudah dibayar',
+                // 'status' => true,
+                // 'message' => 'Order sudah dibayar',
                 'order_status' => $order->get_status()
             ];
         }
@@ -62,9 +62,9 @@ class RestAPI
 
         if($snap_token && $redirect_url){
             return [
-                'status' => true,
-                'message' => 'Payment masih pending',
-                'snap_token' => $snap_token,
+                // 'status' => true,
+                // 'message' => 'Payment masih pending',
+                // 'snap_token' => $snap_token,
                 'payment_url' => $redirect_url
             ];
         }

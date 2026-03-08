@@ -118,8 +118,8 @@ class RestAPI
         $data = $request->get_json_params();
 
         $email = sanitize_email($data['email']);
-        $payment_method = $data['payment_method'];
-        $line_items = $data['line_items'];
+        // $payment_method = $data['payment_method'];
+        $product_id = $data['product_id'];
 
         // cek apakah user sudah ada
         $user = get_user_by('email', $email);
@@ -142,9 +142,9 @@ class RestAPI
             ]);
 
             // Add products
-            foreach ($data['line_items'] as $item) {
+            // foreach ($data['line_items'] as $item) {
 
-                $product = wc_get_product($item['product_id']);
+                $product = wc_get_product($data['product_id']);
 
                 if(!$product){
                     return new WP_REST_Response([
@@ -153,7 +153,7 @@ class RestAPI
                 }
 
                 $order->add_product($product, 1);
-            }
+            // }
 
             // Billing
             // $order->set_address($data['billing'], 'billing');
@@ -252,8 +252,8 @@ class RestAPI
                 "id" => $product->get_id(),
                 "name" => $product->get_name(),
                 "description" => wp_strip_all_tags($product->get_description()),
-                "price" => $product->get_regular_price(),
-                "sale_price" => $product->get_sale_price()
+                "base_price" => $product->get_regular_price(),
+                "final_price" => $product->get_sale_price()
             ];
         }
 

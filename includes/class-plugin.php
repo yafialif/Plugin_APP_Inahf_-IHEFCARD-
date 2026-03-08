@@ -33,10 +33,10 @@ class Plugin
 
     private function init()
     {
-        new Menu();
-        new CPT();
-        new Meta();
-        new RestAPI();
+        // new Menu();
+        // new CPT();
+        // new Meta();
+        // new RestAPI();
 
     }
     

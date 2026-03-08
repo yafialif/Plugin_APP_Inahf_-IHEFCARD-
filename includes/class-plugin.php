@@ -23,10 +23,10 @@ class Plugin
 
     private function includes()
     {
-        require_once CA_PATH . 'includes/class-menu.php';
+        // require_once CA_PATH . 'includes/class-menu.php';
         // require_once CA_PATH . 'includes/class-cpt.php';
         // require_once CA_PATH . 'includes/class-meta.php';
-        require_once CA_PATH . 'includes/class-rest-api.php';
+        // require_once CA_PATH . 'includes/class-rest-api.php';
         
 
     }

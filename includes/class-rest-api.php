@@ -24,6 +24,12 @@ class RestAPI
             'callback' => [$this, 'check_status_order'],
             'permission_callback' => '__return_true'
         ]);
+
+        register_rest_route('payment/v1', '/products', [
+        'methods'  => 'GET',
+        'callback' => [$this, 'get_products'],
+        'permission_callback' => '__return_true'
+        ]);
     }
 
     public function check_status_order($request)
@@ -221,5 +227,38 @@ class RestAPI
             ], 500);
 
         }
+    }
+
+    public function get_products() {
+
+        if(!class_exists('WooCommerce')){
+            return new WP_REST_Response([
+                "error" => "WooCommerce not active"
+            ], 500);
+        }
+
+        $args = [
+            'status' => 'publish',
+            'limit' => -1
+        ];
+
+        $products = wc_get_products($args);
+
+        $data = [];
+
+        foreach($products as $product){
+
+            $data[] = [
+                "id" => $product->get_id(),
+                "name" => $product->get_name(),
+                "description" => wp_strip_all_tags($product->get_description()),
+                "price" => $product->get_regular_price(),
+                "sale_price" => $product->get_sale_price()
+            ];
+        }
+
+        return [
+            "data" => $data
+        ];
     }
 }

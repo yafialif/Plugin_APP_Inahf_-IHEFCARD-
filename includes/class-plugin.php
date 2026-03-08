@@ -2,10 +2,6 @@
 
 namespace ContentAplikasi;
 
-// if (!defined('ABSPATH')) exit;
-// register_activation_hook(__FILE__, function() {
-//     \ContentAplikasi\App_Table::create_table();
-// });
 class Plugin
 {
 
@@ -28,8 +24,8 @@ class Plugin
     private function includes()
     {
         require_once CA_PATH . 'includes/class-menu.php';
-        require_once CA_PATH . 'includes/class-cpt.php';
-        require_once CA_PATH . 'includes/class-meta.php';
+        // require_once CA_PATH . 'includes/class-cpt.php';
+        // require_once CA_PATH . 'includes/class-meta.php';
         require_once CA_PATH . 'includes/class-rest-api.php';
         
 

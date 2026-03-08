@@ -2,8 +2,7 @@
 
 namespace ContentAplikasi;
 
-use WP_Query;
-use WP_Error;
+use WP_REST_Response;
 
 class RestAPI
 {
@@ -16,25 +15,22 @@ class RestAPI
     {
         register_rest_route('package/v1', '/create-order', [
             'methods'  => 'POST',
-            'callback' => 'custom_create_order_midtrans',
+            'callback' => [$this, 'custom_create_order_midtrans'],
             'permission_callback' => '__return_true'
         ]);
-
     }
 
-    // Call function 
-
-    function custom_create_order_midtrans($request){
-
+    public function custom_create_order_midtrans($request)
+    {
         $data = $request->get_json_params();
 
-        if(!class_exists('WC_Order')){
+        if(!class_exists('WooCommerce')){
             return new WP_REST_Response([
                 'error' => 'WooCommerce not active'
             ], 500);
         }
 
-        try{
+        try {
 
             // Create order
             $order = wc_create_order([
@@ -42,7 +38,7 @@ class RestAPI
             ]);
 
             // Add products
-            foreach($data['line_items'] as $item){
+            foreach ($data['line_items'] as $item) {
 
                 $product = wc_get_product($item['product_id']);
 
@@ -55,22 +51,21 @@ class RestAPI
                 $order->add_product($product, $item['quantity']);
             }
 
-            // Billing data
+            // Billing
             $order->set_address($data['billing'], 'billing');
 
-            // Payment method
+            // Payment
             $order->set_payment_method($data['payment_method']);
             $order->set_payment_method_title($data['payment_method_title']);
 
-            // Calculate totals
             $order->calculate_totals();
-
             $order->save();
 
             $order_id = $order->get_id();
 
-            // Load payment gateways
-            $gateways = WC()->payment_gateways()->payment_gateways();
+            // Load gateways
+            WC()->payment_gateways();
+            $gateways = WC()->payment_gateways->payment_gateways();
 
             if(!isset($gateways['midtrans'])){
                 return new WP_REST_Response([
@@ -80,7 +75,7 @@ class RestAPI
 
             $midtrans = $gateways['midtrans'];
 
-            // Trigger Midtrans payment
+            // Create payment
             $result = $midtrans->process_payment($order_id);
 
             return [
@@ -89,7 +84,7 @@ class RestAPI
                 "payment_url" => $result['redirect']
             ];
 
-        }catch(Exception $e){
+        } catch (\Exception $e) {
 
             return new WP_REST_Response([
                 'error' => $e->getMessage()

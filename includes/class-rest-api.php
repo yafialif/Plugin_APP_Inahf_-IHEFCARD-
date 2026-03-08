@@ -215,8 +215,8 @@ class RestAPI
             $order->save();
 
             return [
-                "success" => true,
-                "order_id" => $order->get_id(),
+                // "success" => true,
+                // "order_id" => $order->get_id(),
                 "payment_url" => $payment_url
             ];
 

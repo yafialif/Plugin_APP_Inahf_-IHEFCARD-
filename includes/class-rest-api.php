@@ -13,13 +13,13 @@ class RestAPI
 
     public function register_routes()
     {
-        register_rest_route('package/v1', '/create-order', [
+        register_rest_route('payment/v1', '/create_order', [
             'methods'  => 'POST',
             'callback' => [$this, 'custom_create_order_midtrans'],
             'permission_callback' => '__return_true'
         ]);
 
-        register_rest_route('package/v1', '/check-status', [
+        register_rest_route('payment/v1', '/change_payment_method', [
             'methods'  => 'POST',
             'callback' => [$this, 'check_status_order'],
             'permission_callback' => '__return_true'
@@ -111,6 +111,17 @@ class RestAPI
     {
         $data = $request->get_json_params();
 
+        $email = sanitize_email($data['email']);
+        $payment_method = $data['payment_method'];
+        $line_items = $data['line_items'];
+
+        // cek apakah user sudah ada
+        $user = get_user_by('email', $email);
+
+        if($user){
+            $customer_id = $user->ID;
+        }
+
         if(!class_exists('WooCommerce')){
             return new WP_REST_Response([
                 'error' => 'WooCommerce not active'
@@ -121,7 +132,7 @@ class RestAPI
 
             // Create order
             $order = wc_create_order([
-                'customer_id' => $data['customer_id']
+                'customer_id' => $customer_id
             ]);
 
             // Add products
@@ -139,11 +150,12 @@ class RestAPI
             }
 
             // Billing
-            $order->set_address($data['billing'], 'billing');
+            // $order->set_address($data['billing'], 'billing');
+            $order->set_billing_email($email);
 
             // Payment
-            $order->set_payment_method($data['payment_method']);
-            $order->set_payment_method_title($data['payment_method_title']);
+            $order->set_payment_method($payment_method);
+            $order->set_payment_method_title("Midtrans");
 
             $order->calculate_totals();
             $order->save();
@@ -170,10 +182,9 @@ class RestAPI
                     "gross_amount" => (int)$order->get_total()
                 ],
                 "customer_details" => [
-                    "first_name" => $data['billing']['first_name'],
-                    "last_name" => $data['billing']['last_name'],
-                    "email" => $data['billing']['email'],
-                    "phone" => $data['billing']['phone']
+                    // "first_name" => $data['billing']['first_name'],
+                    // "last_name" => $data['billing']['last_name'],
+                    "email" => $email
                 ],
                 "callbacks" => [
                     // "finish" => "https://ihefcard.inahfcarmet.org/checkout/order-received/".$order_id."/?key=".$order_key,

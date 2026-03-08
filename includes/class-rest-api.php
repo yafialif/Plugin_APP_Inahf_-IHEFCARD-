@@ -103,6 +103,11 @@ class RestAPI
 
             $payment_url = $snap->redirect_url;
 
+            $order->update_meta_data('_mt_snap_token', $snap->token);
+            $order->update_meta_data('_mt_redirect_url', $snap->redirect_url);
+            $order->update_meta_data('_mt_transaction_id', $params['transaction_details']['order_id']);
+            $order->save();
+
             return [
                 "success" => true,
                 "order_id" => $order->get_id(),

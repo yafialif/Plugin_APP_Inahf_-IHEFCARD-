@@ -22,6 +22,7 @@ class Menu
             'dashicons-admin-multisite', // Icon
             5                             // Position
         );
+    }
 
     public function dashboard()
         {
@@ -31,6 +32,5 @@ class Menu
                 <p>Kelola konten Event, HF Clinic, News, dan Recording melalui menu di samping.</p>
             </div>
     <?php
-    }
     }
 }

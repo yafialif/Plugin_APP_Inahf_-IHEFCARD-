@@ -97,9 +97,9 @@ class RestAPI
             $order->save();
 
             return [
-                'status' => true,
-                'message' => 'Snap payment dibuat',
-                'snap_token' => $snap->token,
+                // 'status' => true,
+                // 'message' => 'Snap payment dibuat',
+                // 'snap_token' => $snap->token,
                 'payment_url' => $snap->redirect_url
             ];
 
@@ -215,8 +215,8 @@ class RestAPI
             $order->save();
 
             return [
-                // "success" => true,
-                // "order_id" => $order->get_id(),
+                "success" => true,
+                "order_id" => $order->get_id(),
                 "payment_url" => $payment_url
             ];
 

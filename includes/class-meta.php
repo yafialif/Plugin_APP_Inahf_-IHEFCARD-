@@ -26,7 +26,7 @@ class Meta
 
 
     function recording_video_callback($post) {
-
+        wp_nonce_field('ca_recording_nonce', 'ca_recording_nonce');
     $value = get_post_meta($post->ID,'video_url',true);
 
     ?>
@@ -39,6 +39,14 @@ class Meta
     {
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
             return;
+        }
+
+        if (isset($_POST['ca_recording_nonce']) &&
+            wp_verify_nonce($_POST['ca_recording_nonce'], 'ca_recording_nonce')) {
+
+            update_post_meta($post_id, 'ca_video_url',
+                sanitize_text_field($_POST['video_url'] ?? '')
+            );
         }
 
     }

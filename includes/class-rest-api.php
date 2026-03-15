@@ -30,7 +30,92 @@ class RestAPI
         'callback' => [$this, 'get_products'],
         'permission_callback' => '__return_true'
         ]);
+
+        register_rest_route('content/v1', '/recording', [
+        'methods'  => 'GET',
+        'callback' => 'ca_get_recordings',
+        'permission_callback' => '__return_true'
+        ]);
+
+        register_rest_route('custom/v1', '/faculty', array(
+        'methods'  => 'GET',
+        'callback' => 'get_faculty_api',
+        'permission_callback' => '__return_true'
+        ));
     }
+
+
+    public function get_faculty_api() {
+
+    $args = array(
+        'post_type'      => 'ca_faculty',
+        'post_status'    => 'publish',
+        'posts_per_page' => -1
+    );
+
+    $query = new WP_Query($args);
+
+    $faculty = array();
+
+        if ($query->have_posts()) {
+            while ($query->have_posts()) {
+                $query->the_post();
+
+                $faculty[] = array(
+                    "name" => get_the_title(),
+                    "image_url" => get_the_post_thumbnail_url(get_the_ID(), 'full'),
+                    "page_route" => get_permalink()
+                );
+            }
+        }
+
+        wp_reset_postdata();
+
+        $response = array(
+            "data" => array(
+                "page_title" => "Faculty",
+                "page_content" => $faculty
+            )
+        );
+
+        return rest_ensure_response($response);
+    }
+    public function ca_get_recordings()
+        {
+
+            $args = [
+                'post_type' => 'ca_recording',
+                'post_status' => 'publish',
+                'posts_per_page' => -1
+            ];
+
+            $query = new WP_Query($args);
+
+            $items = [];
+
+            if ($query->have_posts()) {
+                while ($query->have_posts()) {
+
+                    $query->the_post();
+
+                    $items[] = [
+                        "titile" => get_the_title(),
+                        "description" => wp_strip_all_tags(get_the_content()),
+                        "youtube_url" => get_post_meta(get_the_ID(), 'youtube_url', true),
+                        "post_date" => get_the_date('Y-m-d')
+                    ];
+                }
+            }
+
+            wp_reset_postdata();
+
+            return [
+                "data" => [
+                    "page_title" => "Recording",
+                    "page_content" => $items
+                ]
+            ];
+        }
 
     public function check_status_order($request)
     {

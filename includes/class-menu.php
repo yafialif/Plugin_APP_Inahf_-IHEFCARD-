@@ -22,6 +22,21 @@ class Menu
             'dashicons-admin-multisite', // Icon
             5                             // Position
         );
+
+         add_submenu_page(
+            self::MENU_SLUG,
+            'Recording',
+            'Recording',
+            'manage_options',
+            'edit.php?post_type=ca_recording'
+        );
+        add_submenu_page(
+            self::MENU_SLUG,
+            'Faculty',
+            'Faculty',
+            'manage_options',
+            'edit.php?post_type=ca_faculty'
+        );
     }
 
     public function dashboard()

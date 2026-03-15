@@ -34,13 +34,13 @@ class RestAPI
         'permission_callback' => '__return_true'
         ]);
 
-        register_rest_route('ihefcard/content/v1', '/recording', [
+        register_rest_route('ihefcard/v1/content', '/recording', [
         'methods'  => 'GET',
         'callback' => [$this, 'ca_get_recordings'],
         'permission_callback' => '__return_true'
         ]);
 
-        register_rest_route('ihefcard/content/v1', '/faculty_moderator', [
+        register_rest_route('ihefcard/v1/content', '/faculty_moderator', [
         'methods'  => 'GET',
         'callback' => [$this, 'get_faculty_api'],
         'permission_callback' => '__return_true'

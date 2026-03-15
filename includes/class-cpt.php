@@ -44,7 +44,7 @@ class CPT
         ]);
 
 
-
+         error_log('REGISTER CPT WORKING');
     }
 
     

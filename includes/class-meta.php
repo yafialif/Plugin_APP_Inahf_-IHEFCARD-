@@ -16,10 +16,10 @@ class Meta
     {
         // Meta box Recording
         add_meta_box(
-        'recording_video',
+        'ca_recording_video',
         'Video URL',
         [$this, 'recording_video_callback'],
-        'recording'
+        'ca_recording'
     );
        
     }

@@ -3,6 +3,9 @@
 namespace ContentAplikasi;
 
 use WP_REST_Response;
+use WP_Query;
+use WP_Error;
+
 
 class RestAPI
 {

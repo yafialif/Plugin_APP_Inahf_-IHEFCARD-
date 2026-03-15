@@ -37,11 +37,11 @@ class RestAPI
         'permission_callback' => '__return_true'
         ]);
 
-        register_rest_route('ihefcard/content/v1', '/faculty_moderator', array(
+        register_rest_route('ihefcard/content/v1', '/faculty_moderator', [
         'methods'  => 'GET',
         'callback' => [$this, 'get_faculty_api'],
         'permission_callback' => '__return_true'
-        ));
+        ]);
     }
 
 

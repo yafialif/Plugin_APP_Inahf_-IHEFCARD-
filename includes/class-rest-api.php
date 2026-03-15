@@ -104,7 +104,7 @@ class RestAPI
                     $items[] = [
                         "titile" => get_the_title(),
                         "description" => wp_strip_all_tags(get_the_content()),
-                        "youtube_url" => get_post_meta(get_the_ID(), 'youtube_url', true),
+                        "youtube_url" => get_post_meta(get_the_ID(), 'ca_video_url', true),
                         "post_date" => get_the_date('Y-m-d')
                     ];
                 }

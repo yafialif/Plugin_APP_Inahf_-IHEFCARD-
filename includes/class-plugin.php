@@ -24,8 +24,8 @@ class Plugin
     private function includes()
     {
         require_once CA_PATH . 'includes/class-menu.php';
-        // require_once CA_PATH . 'includes/class-cpt.php';
-        // require_once CA_PATH . 'includes/class-meta.php';
+        require_once CA_PATH . 'includes/class-cpt.php';
+        require_once CA_PATH . 'includes/class-meta.php';
         require_once CA_PATH . 'includes/class-rest-api.php';
         
 
@@ -34,8 +34,8 @@ class Plugin
     private function init()
     {
         new Menu();
-        // new CPT();
-        // new Meta();
+        new CPT();
+        new Meta();
         new RestAPI();
 
     }

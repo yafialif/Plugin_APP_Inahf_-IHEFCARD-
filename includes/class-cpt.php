@@ -1,10 +1,8 @@
 <?php
-
 namespace ContentAplikasi;
 
 class CPT
 {
-
     public function __construct()
     {
         add_action('init', [$this, 'register_cpts']);
@@ -12,41 +10,27 @@ class CPT
 
     public function register_cpts()
     {
-         /**
-         * RECORDING
-         */
+
         register_post_type('ca_recording', [
-            'labels' => [
-                'name' => 'Recordings',
-                'singular_name' => 'Recording'
-            ],
+            'label' => 'Recordings',
             'public' => true,
             'show_ui' => true,
-            'show_in_menu' => 'content-aplikasi',
-            'supports' => ['title', 'editor', 'thumbnail'],
-            'rewrite' => ['slug' => 'recording']
+            'show_in_menu' => true,
+            'supports' => ['title','editor','thumbnail'],
+            'rewrite' => ['slug'=>'recording'],
+            'show_in_rest' => true
         ]);
 
-         /**
-         * Faculty
-         */
         register_post_type('ca_faculty', [
-            'labels' => [
-                'name' => 'Faculty',
-                'singular_name' => 'Faculty'
-            ],
+            'label' => 'Faculty',
             'public' => true,
             'show_ui' => true,
-            'show_in_menu' => 'content-aplikasi',
-            'has_archive' => true,
-            'supports' => ['title', 'editor', 'thumbnail'],
-            'rewrite' => ['slug' => 'faculty']
+            'show_in_menu' => true,
+            'supports' => ['title','editor','thumbnail'],
+            'rewrite' => ['slug'=>'faculty'],
+            'show_in_rest' => true
         ]);
 
-
-         error_log('REGISTER CPT WORKING');
+        error_log('REGISTER CPT WORKING');
     }
-
-    
-
 }

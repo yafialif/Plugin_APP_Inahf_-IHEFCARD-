@@ -16,6 +16,8 @@ class RestAPI
 
     public function register_routes()
     {
+
+        // Recording
         register_rest_route('payment/v1', '/create_order', [
             'methods'  => 'POST',
             'callback' => [$this, 'custom_create_order_midtrans'],

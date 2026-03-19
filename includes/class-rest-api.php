@@ -47,6 +47,12 @@ class RestAPI
         'callback' => [$this, 'get_faculty_api'],
         'permission_callback' => '__return_true'
         ]);
+
+        register_rest_route('ihefcard/v1/content', '/home', [
+        'methods'  => 'GET',
+        'callback' => [$this, 'get_home'],
+        'permission_callback' => '__return_true'
+        ]);
     }
 
 
@@ -84,6 +90,90 @@ class RestAPI
         );
 
         return rest_ensure_response($response);
+    }
+
+
+    //get Home
+    public function get_home() {
+    // $repo = new \ContentAplikasi\App_Repository();
+
+        $data = `{
+            "data": {
+                "section_ads": {
+                    "title": "THE 6th I-HEFCARD 2026",
+                    "subtitle": "From Limited to Limitless: The Rise of Heart Failure Care",
+                    "image_ads_url": [
+                        "https://static.vecteezy.com/system/resources/previews/020/091/311/non_2x/sponsor-rubber-stamp-red-sponsor-rubber-grunge-stamp-seal-illustration-free-vector.jpg",
+                        "https://static.vecteezy.com/system/resources/previews/020/091/311/non_2x/sponsor-rubber-stamp-red-sponsor-rubber-grunge-stamp-seal-illustration-free-vector.jpg",
+                        "https://static.vecteezy.com/system/resources/previews/020/091/311/non_2x/sponsor-rubber-stamp-red-sponsor-rubber-grunge-stamp-seal-illustration-free-vector.jpg",
+                        "https://static.vecteezy.com/system/resources/previews/020/091/311/non_2x/sponsor-rubber-stamp-red-sponsor-rubber-grunge-stamp-seal-illustration-free-vector.jpg",
+                        "https://static.vecteezy.com/system/resources/previews/020/091/311/non_2x/sponsor-rubber-stamp-red-sponsor-rubber-grunge-stamp-seal-illustration-free-vector.jpg"
+                    ]
+                },
+                "section_menu": [
+                    {
+                        "icon": "https://www.google.com",
+                        "name": "InaHF",
+                        "type": "inahf",
+                        "page_route": null
+                    },
+                    {
+                        "icon": "https://www.google.com",
+                        "name": "Committee",
+                        "type": "webview",
+                        "page_route": "https://ihefcard.com/committee"
+                    },
+                    {
+                        "icon": "https://www.google.com",
+                        "name": "Package",
+                        "type": "package",
+                        "page_route": null
+                    },
+                    {
+                        "icon": "https://www.google.com",
+                        "name": "Recording",
+                        "type": "recording",
+                        "page_route": null
+                    },
+                    {
+                        "icon": "https://www.google.com",
+                        "name": "Speakers",
+                        "type": "speakers",
+                        "page_route": null
+                    },
+                    {
+                        "icon": "https://www.google.com",
+                        "name": "Satu Sehat",
+                        "type": "satusehat",
+                        "page_route": "https://lms.kemkes.go.id/"
+                    }
+                ],
+                "section_image_carousel": {
+                    "title": "Our incredible moments",
+                    "subtitle": null,
+                    "images_url": [
+                        "https://ihefcard.com/assets/images/gallery/image-2.webp",
+                        "https://ihefcard.com/assets/images/gallery/image-10.webp",
+                        "https://ihefcard.com/assets/images/gallery/image-5.webp",
+                        "https://ihefcard.com/assets/images/gallery/image-5.webp"
+                    ]
+                },
+                "section_location": {
+                    "title": "Sheraton Grand Jakarta Gandaria City Hotel",
+                    "subtitle": "11-13 June 2026",
+                    "location_point": {
+                        "latitude": "-6.244909053384983",
+                        "longitude": "106.78272544998704"
+                    }
+                }
+            }
+        }`;
+        // return [
+        //     // 'data' => $repo->get_sections('home')
+        //     'data' => $data;
+        // ];
+        // return 1;
+        return json_decode($data, true);
     }
     public function ca_get_recordings()
         {

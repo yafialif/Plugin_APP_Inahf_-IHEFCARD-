@@ -97,7 +97,7 @@ class RestAPI
     public function get_home() {
     // $repo = new \ContentAplikasi\App_Repository();
 
-        $data = `{
+        $data = '{
             "data": {
                 "section_ads": {
                     "title": "THE 6th I-HEFCARD 2026",
@@ -167,7 +167,7 @@ class RestAPI
                     }
                 }
             }
-        }`;
+        }';
         // return [
         //     // 'data' => $repo->get_sections('home')
         //     'data' => $data;

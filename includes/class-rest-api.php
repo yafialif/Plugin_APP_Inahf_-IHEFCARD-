@@ -98,76 +98,90 @@ class RestAPI
     // $repo = new \ContentAplikasi\App_Repository();
 
         $data = '{
-            "data": {
-                "section_ads": {
-                    "title": "THE 6th I-HEFCARD 2026",
-                    "subtitle": "From Limited to Limitless: The Rise of Heart Failure Care",
-                    "image_ads_url": [
-                        "https://static.vecteezy.com/system/resources/previews/020/091/311/non_2x/sponsor-rubber-stamp-red-sponsor-rubber-grunge-stamp-seal-illustration-free-vector.jpg",
-                        "https://static.vecteezy.com/system/resources/previews/020/091/311/non_2x/sponsor-rubber-stamp-red-sponsor-rubber-grunge-stamp-seal-illustration-free-vector.jpg",
-                        "https://static.vecteezy.com/system/resources/previews/020/091/311/non_2x/sponsor-rubber-stamp-red-sponsor-rubber-grunge-stamp-seal-illustration-free-vector.jpg",
-                        "https://static.vecteezy.com/system/resources/previews/020/091/311/non_2x/sponsor-rubber-stamp-red-sponsor-rubber-grunge-stamp-seal-illustration-free-vector.jpg",
-                        "https://static.vecteezy.com/system/resources/previews/020/091/311/non_2x/sponsor-rubber-stamp-red-sponsor-rubber-grunge-stamp-seal-illustration-free-vector.jpg"
+                    "data": [
+                        {
+                            "type": "section_ads",
+                            "payload": {
+                                "title": "THE 6th I-HEFCARD 2026",
+                                "subtitle": "From Limited to Limitless: The Rise of Heart Failure Care",
+                                "background_gradient": "GradientOrange",
+                                "image_ads_url": [
+                                    "https://static.vecteezy.com/system/resources/previews/020/091/311/non_2x/sponsor-rubber-stamp-red-sponsor-rubber-grunge-stamp-seal-illustration-free-vector.jpg",
+                                    "https://static.vecteezy.com/system/resources/previews/020/091/311/non_2x/sponsor-rubber-stamp-red-sponsor-rubber-grunge-stamp-seal-illustration-free-vector.jpg"
+                                ]
+                            }
+                        },
+                        {
+                            "type": "section_menu",
+                            "payload": {
+                                "color": "#42D6E0",
+                                "row_item_count": 4,
+                                "menus": [
+                                    {
+                                        "icon": "https://www.google.com",
+                                        "name": "InaHF",
+                                        "type": "inahf",
+                                        "page_route": null
+                                    },
+                                    {
+                                        "icon": "https://www.google.com",
+                                        "name": "Committee",
+                                        "type": "webview",
+                                        "page_route": "https://ihefcard.com/committee"
+                                    },
+                                    {
+                                        "icon": "https://www.google.com",
+                                        "name": "Package",
+                                        "type": "package",
+                                        "page_route": null
+                                    },
+                                    {
+                                        "icon": "https://www.google.com",
+                                        "name": "Recording",
+                                        "type": "recording",
+                                        "page_route": null
+                                    },
+                                    {
+                                        "icon": "https://www.google.com",
+                                        "name": "Speakers",
+                                        "type": "speakers",
+                                        "page_route": null
+                                    },
+                                    {
+                                        "icon": "https://www.google.com",
+                                        "name": "Satu Sehat",
+                                        "type": "satusehat",
+                                        "page_route": "https://lms.kemkes.go.id/"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "section_image_carousel",
+                            "payload": {
+                                "title": "Our incredible moments",
+                                "subtitle": null,
+                                "images_url": [
+                                    "https://ihefcard.com/assets/images/gallery/image-2.webp",
+                                    "https://ihefcard.com/assets/images/gallery/image-10.webp",
+                                    "https://ihefcard.com/assets/images/gallery/image-5.webp",
+                                    "https://ihefcard.com/assets/images/gallery/image-5.webp"
+                                ]
+                            }
+                        },
+                        {
+                            "type": "section_location",
+                            "payload": {
+                                "title": "Sheraton Grand Jakarta Gandaria City Hotel",
+                                "subtitle": "11-13 June 2026",
+                                "location_point": {
+                                    "latitude": "-6.244909053384983",
+                                    "longitude": "106.78272544998704"
+                                }
+                            }
+                        }
                     ]
-                },
-                "section_menu": [
-                    {
-                        "icon": "https://www.google.com",
-                        "name": "InaHF",
-                        "type": "inahf",
-                        "page_route": null
-                    },
-                    {
-                        "icon": "https://www.google.com",
-                        "name": "Committee",
-                        "type": "webview",
-                        "page_route": "https://ihefcard.com/committee"
-                    },
-                    {
-                        "icon": "https://www.google.com",
-                        "name": "Package",
-                        "type": "package",
-                        "page_route": null
-                    },
-                    {
-                        "icon": "https://www.google.com",
-                        "name": "Recording",
-                        "type": "recording",
-                        "page_route": null
-                    },
-                    {
-                        "icon": "https://www.google.com",
-                        "name": "Speakers",
-                        "type": "speakers",
-                        "page_route": null
-                    },
-                    {
-                        "icon": "https://www.google.com",
-                        "name": "Satu Sehat",
-                        "type": "satusehat",
-                        "page_route": "https://lms.kemkes.go.id/"
-                    }
-                ],
-                "section_image_carousel": {
-                    "title": "Our incredible moments",
-                    "subtitle": null,
-                    "images_url": [
-                        "https://ihefcard.com/assets/images/gallery/image-2.webp",
-                        "https://ihefcard.com/assets/images/gallery/image-10.webp",
-                        "https://ihefcard.com/assets/images/gallery/image-5.webp",
-                        "https://ihefcard.com/assets/images/gallery/image-5.webp"
-                    ]
-                },
-                "section_location": {
-                    "title": "Sheraton Grand Jakarta Gandaria City Hotel",
-                    "subtitle": "11-13 June 2026",
-                    "location_point": {
-                        "latitude": "-6.244909053384983",
-                        "longitude": "106.78272544998704"
-                    }
-                }
-            }
-        }';
+                }';
         // return [
         //     // 'data' => $repo->get_sections('home')
         //     'data' => $data;

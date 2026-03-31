@@ -53,7 +53,105 @@ class RestAPI
         'callback' => [$this, 'get_home'],
         'permission_callback' => '__return_true'
         ]);
+
+        
+        register_rest_route('custom/v1', '/attendee_list', array(
+            'methods'  => 'POST',
+            'callback' => [$this,'get_attendee_summary'],
+            'permission_callback' => '__return_true'
+        ));
+
+
     }
+
+    public function get_attendee_summary(WP_REST_Request $request) {
+    global $wpdb;
+
+    $table_days       = $wpdb->prefix . 'event_days';
+    $table_activities = $wpdb->prefix . 'activities';
+    $table_attendence = $wpdb->prefix . 'attendence';
+
+    $params = $request->get_json_params();
+    $email  = $params['data']['email'] ?? null;
+
+    if (!$email) {
+        return new WP_REST_Response([
+            'status' => 'error',
+            'message' => 'Email wajib diisi'
+        ], 400);
+    }
+
+    // ========================
+    // GET USER
+    // ========================
+    $user = get_user_by('email', $email);
+
+    if (!$user) {
+        return new WP_REST_Response([
+            'status' => 'error',
+            'message' => 'User tidak ditemukan'
+        ], 404);
+    }
+
+    $user_id = $user->ID;
+
+    // ========================
+    // GET ALL DAYS
+    // ========================
+    $days = $wpdb->get_results("SELECT * FROM $table_days ORDER BY event_date ASC");
+
+    $result = [];
+
+    foreach ($days as $day) {
+
+        // format tanggal seperti JSON
+        $formatted_date = date('l, d F Y', strtotime($day->event_date));
+
+        // ========================
+        // GET ACTIVITIES PER DAY
+        // ========================
+        $activities = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM $table_activities WHERE event_day_id = %d",
+            $day->id
+        ));
+
+        $activity_list = [];
+
+        foreach ($activities as $act) {
+
+            // ========================
+            // CEK ATTENDANCE
+            // ========================
+            $attend = $wpdb->get_var($wpdb->prepare(
+                "SELECT COUNT(*) FROM $table_attendence 
+                 WHERE id_user = %d AND activity_id = %d",
+                $user_id,
+                $act->id
+            ));
+
+            $activity_list[] = [
+                "title"       => $act->title,
+                "time_start"  => $act->time_start,
+                "time_end"    => $act->time_end,
+                "checkin"     => $act->checkin,
+                "status"      => $attend > 0 ? true : false,
+                "type"        => $act->type
+            ];
+        }
+
+        $result[] = [
+            "date" => $formatted_date,
+            "activities" => $activity_list
+        ];
+    }
+
+    return new WP_REST_Response([
+        "data" => [
+            "page_title" => "Summary",
+            "page_content" => $result
+        ]
+    ], 200);
+}
 
 
     public function get_faculty_api() {

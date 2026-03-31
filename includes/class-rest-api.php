@@ -36,7 +36,7 @@ class RestAPI
         'permission_callback' => '__return_true'
         ]);
 
-        register_rest_route('contern/v1/content', '/recording', [
+        register_rest_route('ihefcard/v1/content', '/recording', [
         'methods'  => 'GET',
         'callback' => [$this, 'ca_get_recordings'],
         'permission_callback' => '__return_true'

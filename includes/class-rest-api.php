@@ -441,7 +441,7 @@ class RestAPI
         $body = wp_remote_retrieve_body($response);
         $data = json_decode($body, true);
         $email = sanitize_email($data['email']);
-        return $product_id;
+        // return $product_id;
 
         
         // $payment_method = $data['payment_method'];
@@ -470,7 +470,7 @@ class RestAPI
             // Add products
             // foreach ($data['line_items'] as $item) {
 
-                $product = wc_get_product($data['product_id']);
+                $product = wc_get_product($product_id);
 
                 if(!$product){
                     return new WP_REST_Response([

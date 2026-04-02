@@ -62,7 +62,7 @@ class RestAPI
         ));
 
        
-        register_rest_route('auth/v1', '/create-user', [
+        register_rest_route('auth/v1', '/create_user', [
             'methods'  => 'POST',
             'callback' => [$this,'my_create_user'],
             'permission_callback' => '__return_true', // nanti bisa diamankan pakai API key
@@ -73,57 +73,68 @@ class RestAPI
 
     // Create User
 
-    function my_create_user($request)
+    function my_create_user(\WP_REST_Request $request)
     {
-        $params = $request->get_json_params();
+         // Ambil header Authorization
+        $auth = $request->get_header('authorization');
+        if ($auth =='InahfCarmet2026') {
+            $params = $request->get_json_params();
 
-        $email = sanitize_email($params['email'] ?? '');
-        $name  = sanitize_text_field($params['name'] ?? '');
+            $email = sanitize_email($params['email'] ?? '');
+            $name  = sanitize_text_field($params['name'] ?? '');
 
-        if (!$email) {
+            if (!$email) {
+                return new WP_REST_Response([
+                    'success' => false,
+                    'message' => 'Email is required'
+                ], 400);
+            }
+
+            // Cek apakah email sudah ada
+            if (email_exists($email)) {
+                return new WP_REST_Response([
+                    'success' => false,
+                    'message' => 'Email already exists'
+                ], 409);
+            }
+
+            // Create user
+            $user_id = wp_create_user($email, 'ihefcard', $email);
+
+            if (is_wp_error($user_id)) {
+                return new WP_REST_Response([
+                    'success' => false,
+                    'message' => $user_id->get_error_message()
+                ], 500);
+            }
+
+            // Set role
+            $user = new WP_User($user_id);
+            $user->set_role('um_user_app');
+
+            // Update display name
+            if ($name) {
+                wp_update_user([
+                    'ID' => $user_id,
+                    'display_name' => $name,
+                ]);
+            }
+
+            return [
+                'success' => true,
+                'user_id' => $user_id,
+                'email'   => $email,
+                'username'=> $email,
+                'password'=> 'ihefcard' // optional, bisa dihapus kalau tidak mau expose
+            ];
+        }
+        else{
             return new WP_REST_Response([
-                'success' => false,
-                'message' => 'Email is required'
-            ], 400);
+                'valid' => false,
+                'message' => 'Error token'
+            ], 401);
         }
-
-        // Cek apakah email sudah ada
-        if (email_exists($email)) {
-            return new WP_REST_Response([
-                'success' => false,
-                'message' => 'Email already exists'
-            ], 409);
-        }
-
-        // Create user
-        $user_id = wp_create_user($email, 'ihefcard', $email);
-
-        if (is_wp_error($user_id)) {
-            return new WP_REST_Response([
-                'success' => false,
-                'message' => $user_id->get_error_message()
-            ], 500);
-        }
-
-        // Set role
-        $user = new WP_User($user_id);
-        $user->set_role('um_user_app');
-
-        // Update display name
-        if ($name) {
-            wp_update_user([
-                'ID' => $user_id,
-                'display_name' => $name,
-            ]);
-        }
-
-        return [
-            'success' => true,
-            'user_id' => $user_id,
-            'email'   => $email,
-            'username'=> $email,
-            'password'=> 'ihefcard' // optional, bisa dihapus kalau tidak mau expose
-        ];
+        
     }
 
     public function get_attendee_summary(WP_REST_Request $request) {

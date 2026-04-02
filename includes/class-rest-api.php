@@ -412,6 +412,10 @@ class RestAPI
     public function custom_create_order_midtrans(\WP_REST_Request $request)
     {
 
+        $params = $request->get_json_params();
+
+        $product_id  = sanitize_text_field($params['product_id'] ?? '');
+        //  $product_id = $data['product_id'];
         // Ambil header Authorization
         $auth = $request->get_header('authorization');
         $token = str_replace('Bearer ', '', $auth);
@@ -437,11 +441,11 @@ class RestAPI
         $body = wp_remote_retrieve_body($response);
         $data = json_decode($body, true);
         $email = sanitize_email($data['email']);
-        return $email;
+        // return $email;
 
         
         // $payment_method = $data['payment_method'];
-        $product_id = $data['product_id'];
+       
 
         // cek apakah user sudah ada
         $user = get_user_by('email', $email);

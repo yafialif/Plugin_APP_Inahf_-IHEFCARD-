@@ -409,9 +409,34 @@ class RestAPI
         }
     }
 
-    public function custom_create_order_midtrans($request)
+    public function custom_create_order_midtrans(\WP_REST_Request $request)
     {
-        $data = $request->get_json_params();
+
+        // Ambil header Authorization
+        $auth = $request->get_header('authorization');
+        $token = str_replace('Bearer ', '', $auth);
+        $response = wp_remote_get(
+            'https://inahfcarmet.org/wp-json/auth/v1/validate',
+            array(
+                'headers' => array(
+                    'Authorization' => $token
+                ),
+                'timeout' => 20
+            )
+        );
+
+        // Cek error
+        if (is_wp_error($response)) {
+            return [
+                'status' => 'error',
+                'message' => $response->get_error_message()
+            ];
+        }
+
+        // Ambil body
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+
 
         $email = sanitize_email($data['email']);
         // $payment_method = $data['payment_method'];

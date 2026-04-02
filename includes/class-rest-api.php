@@ -98,8 +98,13 @@ class RestAPI
                 ], 409);
             }
 
+            $username = sanitize_user(explode('@', $email)[0]);
+
+            if (username_exists($username)) {
+                $username .= '_' . rand(100, 999);
+            }
             // Create user
-            $user_id = wp_create_user($email, 'ihefcard', $email);
+            $user_id = wp_create_user($username, 'ihefcard', $email);
 
             if (is_wp_error($user_id)) {
                 return new WP_REST_Response([
@@ -109,8 +114,14 @@ class RestAPI
             }
 
             // Set role
-            $user = new WP_User($user_id);
-            $user->set_role('um_user_app');
+            // $user = new WP_User($user_id);
+            $user = get_user_by('id', $user_id);
+             if (!get_role('um_user_app')) {
+                return new WP_REST_Response([
+                    'success' => false,
+                    'message' => 'Role um_user_app not found'
+                ], 500);
+            }
 
             // Update display name
             if ($name) {
@@ -124,7 +135,7 @@ class RestAPI
                 'success' => true,
                 'user_id' => $user_id,
                 'email'   => $email,
-                'username'=> $email,
+                'username'=> $username,
                 'password'=> 'ihefcard' // optional, bisa dihapus kalau tidak mau expose
             ];
         }

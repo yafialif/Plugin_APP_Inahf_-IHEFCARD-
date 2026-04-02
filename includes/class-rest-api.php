@@ -73,7 +73,7 @@ class RestAPI
 
     // Create User
 
-    function my_create_user(\WP_REST_Request $request)
+    public function my_create_user(\WP_REST_Request $request)
     {
          // Ambil header Authorization
         $auth = $request->get_header('authorization');

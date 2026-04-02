@@ -441,7 +441,7 @@ class RestAPI
         $body = wp_remote_retrieve_body($response);
         $data = json_decode($body, true);
         $email = sanitize_email($data['email']);
-        // return $email;
+        return $product_id;
 
         
         // $payment_method = $data['payment_method'];

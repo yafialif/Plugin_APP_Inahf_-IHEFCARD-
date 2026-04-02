@@ -85,7 +85,8 @@ class RestAPI
         }
 
         // ambil semua kemungkinan input
-        $params = $request->get_json_params();
+        // $params = $request->get_json_params();
+        $params = $request->get_params();
 
         if (empty($params)) {
             $params = $request->get_params(); // fallback

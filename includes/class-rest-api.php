@@ -77,12 +77,30 @@ class RestAPI
     {
          // Ambil header Authorization
         $auth = $request->get_header('authorization');
-        if ($auth =='InahfCarmet2026') {
-            $params = $request->get_json_params();
+        if ($auth !== 'InahfCarmet2026') {
+            return new WP_REST_Response([
+                'success' => false,
+                'message' => 'Unauthorized'
+            ], 401);
+        }
 
-            $email = sanitize_email($params['email'] ?? '');
-            $name  = sanitize_text_field($params['name'] ?? '');
+        // ambil semua kemungkinan input
+        $params = $request->get_json_params();
 
+        if (empty($params)) {
+            $params = $request->get_params(); // fallback
+        }
+
+        // validasi params
+        if (!is_array($params)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'message' => 'Invalid request body'
+            ], 400);
+        }
+
+        $email = sanitize_email($params['email'] ?? '');
+        $name  = sanitize_text_field($params['name'] ?? '');
             if (!$email) {
                 return new WP_REST_Response([
                     'success' => false,
@@ -138,13 +156,6 @@ class RestAPI
                 'username'=> $username,
                 'password'=> 'ihefcard' // optional, bisa dihapus kalau tidak mau expose
             ];
-        }
-        else{
-            return new WP_REST_Response([
-                'valid' => false,
-                'message' => 'Error token'
-            ], 401);
-        }
         
     }
 

@@ -80,8 +80,6 @@ class RestAPI
 
     public function handle_checkin(\WP_REST_Request $request)
     {
-
-
         global $wpdb;
 
         $table_days        = $wpdb->prefix . 'event_days';
@@ -90,43 +88,36 @@ class RestAPI
         $table_category    = $wpdb->prefix . 'categoryAttendence';
         $table_users       = $wpdb->prefix . 'users';
 
-
         $params = $request->get_json_params();
-
         $code_qr  = sanitize_text_field($params['code_qr'] ?? '');
 
-
+        // =========================
+        // AUTH
+        // =========================
         $auth = $request->get_header('authorization');
         $token = str_replace('Bearer ', '', $auth);
+
         $response = wp_remote_get(
             'https://inahfcarmet.org/wp-json/auth/v1/validate',
-            array(
-                'headers' => array(
-                    'Authorization' => $token
-                ),
+            [
+                'headers' => ['Authorization' => $token],
                 'timeout' => 20
-            )
+            ]
         );
 
-        // Cek error
         if (is_wp_error($response)) {
-            return [
-                'status' => 'error',
-                'message' => $response->get_error_message()
-            ];
+            return ['status' => false, 'message' => $response->get_error_message()];
         }
 
-        // Ambil body
-        $body = wp_remote_retrieve_body($response);
-        $data = json_decode($body, true);
-        $email = sanitize_email($data['email']);
+        $body = json_decode(wp_remote_retrieve_body($response), true);
+        $email = sanitize_email($body['email'] ?? '');
 
         // =========================
-        // 1. GET USER
+        // GET USER
         // =========================
         $user = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT ID, user_email FROM $table_users WHERE user_email = %s",
+                "SELECT ID FROM $table_users WHERE user_email = %s",
                 $email
             )
         );
@@ -136,45 +127,84 @@ class RestAPI
         }
 
         // =========================
-        // 2. GET CATEGORY (UID)
+        // GET CATEGORY + ACTIVITY
         // =========================
         $category = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT * FROM $table_category WHERE uid = %s",
+                "SELECT id, activity_id FROM $table_category WHERE uid = %s",
                 $code_qr
             )
         );
 
         if (!$category) {
-            return ['status' => false, 'message' => 'UID tidak valid'];
+            return ['status' => false, 'message' => 'QR tidak valid'];
+        }
+
+        $activity_id = $category->activity_id;
+
+        if (!$activity_id) {
+            return ['status' => false, 'message' => 'Category tidak punya activity'];
         }
 
         // =========================
-        // 3. CHECK EXISTING CHECKIN
+        // GET ACTIVITY TYPE
         // =========================
-        $already = $wpdb->get_row(
+        $activity = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT id FROM $table_attendence 
-                WHERE id_user = %d AND id_category = %d",
-                $user->ID,
-                $category->id
+                "SELECT type FROM $table_activities WHERE id = %d",
+                $activity_id
             )
         );
 
-        if (!$already) {
-            $wpdb->insert(
-                $table_attendence,
-                [
-                    'id_user'     => $user->ID,
-                    'id_category' => $category->id,
-                    'time'  => current_time('mysql')
-                ],
-                ['%d', '%d', '%s']
-            );
+        // =========================
+        // CHECK ATTENDANCE
+        // =========================
+        $existing = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT * FROM $table_attendence 
+                WHERE id_user = %d AND activity_id = %d",
+                $user->ID,
+                $activity_id
+            )
+        );
+
+        // =========================
+        // LOGIC CHECKIN / CHECKOUT
+        // =========================
+        if ($activity->type === 'session') {
+
+            if (count($existing) >= 2) {
+                return ['status' => false, 'message' => 'Sudah check-in & check-out'];
+            }
+
+            $type = count($existing) == 0 ? 'checkin' : 'checkout';
+
+        } else {
+
+            if (!empty($existing)) {
+                return ['status' => false, 'message' => 'Sudah check-in'];
+            }
+
+            $type = 'checkin';
         }
 
         // =========================
-        // 4. BUILD SUMMARY
+        // INSERT
+        // =========================
+        $wpdb->insert(
+            $table_attendence,
+            [
+                'id_user'     => $user->ID,
+                'id_category' => $category->id,
+                'activity_id' => $activity_id,
+                'type'        => $type,
+                'time'        => current_time('mysql')
+            ],
+            ['%d', '%d', '%d', '%s', '%s']
+        );
+
+        // =========================
+        // BUILD SUMMARY
         // =========================
         $days = $wpdb->get_results("SELECT * FROM $table_days ORDER BY event_date ASC");
 
@@ -184,10 +214,7 @@ class RestAPI
 
             $activities = $wpdb->get_results(
                 $wpdb->prepare(
-                    "SELECT a.*, c.id as category_id
-                    FROM $table_activities a
-                    LEFT JOIN $table_category c ON c.activity_id = a.id
-                    WHERE a.day_id = %d",
+                    "SELECT * FROM $table_activities WHERE day_id = %d",
                     $day->id
                 )
             );
@@ -196,39 +223,39 @@ class RestAPI
 
             foreach ($activities as $act) {
 
-                // cek attendance user
-                $att = null;
-                if ($act->category_id) {
-                    $att = $wpdb->get_row(
-                        $wpdb->prepare(
-                            "SELECT checkin_at 
-                            FROM $table_attendence
-                            WHERE user_id = %d AND category_id = %d",
-                            $user->ID,
-                            $act->category_id
-                        )
-                    );
+                $att = $wpdb->get_results(
+                    $wpdb->prepare(
+                        "SELECT * FROM $table_attendence
+                        WHERE id_user = %d AND activity_id = %d",
+                        $user->ID,
+                        $act->id
+                    )
+                );
+
+                $checkin = null;
+
+                foreach ($att as $a) {
+                    if ($a->type === 'checkin') {
+                        $checkin = date('H:i', strtotime($a->time));
+                    }
                 }
 
                 $activity_list[] = [
                     'title'      => $act->title,
                     'time_start' => $act->time_start ?: null,
                     'time_end'   => $act->time_end ?: null,
-                    'checkin'    => $att ? date('H:i', strtotime($att->time)) : null,
-                    'status'     => $att ? true : null,
+                    'checkin'    => $checkin,
+                    'status'     => !empty($att) ? true : null,
                     'type'       => $act->type
                 ];
             }
 
             $result[] = [
-                'date'       => date('l, d F Y', strtotime($day->date)),
+                'date'       => date('l, d F Y', strtotime($day->event_date)),
                 'activities' => $activity_list
             ];
         }
 
-        // =========================
-        // 5. FINAL RESPONSE
-        // =========================
         return [
             'data' => [
                 'page_title'   => 'Summary',

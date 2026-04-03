@@ -68,7 +68,140 @@ class RestAPI
             'permission_callback' => '__return_true', // nanti bisa diamankan pakai API key
         ]);
 
+        register_rest_route('ihefcard/v1/content', '/checkin', [
+            'methods'  => 'POST',
+            'callback' => [$this,'handle_checkin'],
+            'permission_callback' => '__return_true', // nanti bisa diamankan pakai API key
+        ]);
 
+
+    }
+
+
+    public function handle_checkin(\WP_REST_Request $request)
+    {
+        global $wpdb;
+
+        $table_days        = $wpdb->prefix . 'event_days';
+        $table_activities  = $wpdb->prefix . 'activities';
+        $table_attendence  = $wpdb->prefix . 'attendence';
+        $table_category    = $wpdb->prefix . 'categoryAttendence';
+        $table_users       = $wpdb->prefix . 'users';
+
+        // =========================
+        // 1. GET USER
+        // =========================
+        $user = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT ID, user_email FROM $table_users WHERE user_email = %s",
+                $user_email
+            )
+        );
+
+        if (!$user) {
+            return ['status' => false, 'message' => 'User tidak ditemukan'];
+        }
+
+        // =========================
+        // 2. GET CATEGORY (UID)
+        // =========================
+        $category = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT * FROM $table_category WHERE uid = %s",
+                $uid_category
+            )
+        );
+
+        if (!$category) {
+            return ['status' => false, 'message' => 'UID tidak valid'];
+        }
+
+        // =========================
+        // 3. CHECK EXISTING CHECKIN
+        // =========================
+        $already = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT id FROM $table_attendence 
+                WHERE user_id = %d AND category_id = %d",
+                $user->ID,
+                $category->id
+            )
+        );
+
+        if (!$already) {
+            $wpdb->insert(
+                $table_attendence,
+                [
+                    'user_id'     => $user->ID,
+                    'category_id' => $category->id,
+                    'checkin_at'  => current_time('mysql')
+                ],
+                ['%d', '%d', '%s']
+            );
+        }
+
+        // =========================
+        // 4. BUILD SUMMARY
+        // =========================
+        $days = $wpdb->get_results("SELECT * FROM $table_days ORDER BY date ASC");
+
+        $result = [];
+
+        foreach ($days as $day) {
+
+            $activities = $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT a.*, c.id as category_id
+                    FROM $table_activities a
+                    LEFT JOIN $table_category c ON c.activity_id = a.id
+                    WHERE a.day_id = %d",
+                    $day->id
+                )
+            );
+
+            $activity_list = [];
+
+            foreach ($activities as $act) {
+
+                // cek attendance user
+                $att = null;
+                if ($act->category_id) {
+                    $att = $wpdb->get_row(
+                        $wpdb->prepare(
+                            "SELECT checkin_at 
+                            FROM $table_attendence
+                            WHERE user_id = %d AND category_id = %d",
+                            $user->ID,
+                            $act->category_id
+                        )
+                    );
+                }
+
+                $activity_list[] = [
+                    'title'      => $act->title,
+                    'time_start' => $act->time_start ?: null,
+                    'time_end'   => $act->time_end ?: null,
+                    'checkin'    => $att ? date('H:i', strtotime($att->checkin_at)) : null,
+                    'status'     => $att ? true : null,
+                    'type'       => $act->type
+                ];
+            }
+
+            $result[] = [
+                'date'       => date('l, d F Y', strtotime($day->date)),
+                'activities' => $activity_list
+            ];
+        }
+
+        // =========================
+        // 5. FINAL RESPONSE
+        // =========================
+        return [
+            'data' => [
+                'page_title'   => 'Summary',
+                'page_content' => $result
+            ]
+        ];
     }
 
     // Create User

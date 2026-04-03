@@ -160,7 +160,7 @@ class RestAPI
         
     }
 
-    public function get_attendee_summary(WP_REST_Request $request) {
+    public function get_attendee_summary(\WP_REST_Request $request) {
     global $wpdb;
 
     $table_days       = $wpdb->prefix . 'event_days';

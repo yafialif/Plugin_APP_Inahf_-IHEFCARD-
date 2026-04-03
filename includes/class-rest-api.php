@@ -56,7 +56,7 @@ class RestAPI
 
         
         register_rest_route('ihefcard/v1/content', '/attendee_list', array(
-            'methods'  => 'POST',
+            'methods'  => 'GET',
             'callback' => [$this,'get_attendee_summary'],
             'permission_callback' => '__return_true'
         ));

@@ -155,7 +155,7 @@ class RestAPI
         $already = $wpdb->get_row(
             $wpdb->prepare(
                 "SELECT id FROM $table_attendence 
-                WHERE user_id = %d AND category_id = %d",
+                WHERE id_user = %d AND id_category = %d",
                 $user->ID,
                 $category->id
             )
@@ -165,9 +165,9 @@ class RestAPI
             $wpdb->insert(
                 $table_attendence,
                 [
-                    'user_id'     => $user->ID,
-                    'category_id' => $category->id,
-                    'checkin_at'  => current_time('mysql')
+                    'id_user'     => $user->ID,
+                    'id_category' => $category->id,
+                    'time'  => current_time('mysql')
                 ],
                 ['%d', '%d', '%s']
             );
@@ -214,7 +214,7 @@ class RestAPI
                     'title'      => $act->title,
                     'time_start' => $act->time_start ?: null,
                     'time_end'   => $act->time_end ?: null,
-                    'checkin'    => $att ? date('H:i', strtotime($att->checkin_at)) : null,
+                    'checkin'    => $att ? date('H:i', strtotime($att->time)) : null,
                     'status'     => $att ? true : null,
                     'type'       => $act->type
                 ];

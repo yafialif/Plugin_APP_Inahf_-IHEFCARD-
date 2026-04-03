@@ -80,6 +80,8 @@ class RestAPI
 
     public function handle_checkin(\WP_REST_Request $request)
     {
+
+
         global $wpdb;
 
         $table_days        = $wpdb->prefix . 'event_days';
@@ -88,13 +90,44 @@ class RestAPI
         $table_category    = $wpdb->prefix . 'categoryAttendence';
         $table_users       = $wpdb->prefix . 'users';
 
+
+        $params = $request->get_json_params();
+
+        $code_qr  = sanitize_text_field($params['code_qr'] ?? '');
+
+
+        $auth = $request->get_header('authorization');
+        $token = str_replace('Bearer ', '', $auth);
+        $response = wp_remote_get(
+            'https://inahfcarmet.org/wp-json/auth/v1/validate',
+            array(
+                'headers' => array(
+                    'Authorization' => $token
+                ),
+                'timeout' => 20
+            )
+        );
+
+        // Cek error
+        if (is_wp_error($response)) {
+            return [
+                'status' => 'error',
+                'message' => $response->get_error_message()
+            ];
+        }
+
+        // Ambil body
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+        $email = sanitize_email($data['email']);
+
         // =========================
         // 1. GET USER
         // =========================
         $user = $wpdb->get_row(
             $wpdb->prepare(
                 "SELECT ID, user_email FROM $table_users WHERE user_email = %s",
-                $user_email
+                $email
             )
         );
 
@@ -108,7 +141,7 @@ class RestAPI
         $category = $wpdb->get_row(
             $wpdb->prepare(
                 "SELECT * FROM $table_category WHERE uid = %s",
-                $uid_category
+                $code_qr
             )
         );
 

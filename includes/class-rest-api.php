@@ -176,7 +176,7 @@ class RestAPI
         // =========================
         // 4. BUILD SUMMARY
         // =========================
-        $days = $wpdb->get_results("SELECT * FROM $table_days ORDER BY date ASC");
+        $days = $wpdb->get_results("SELECT * FROM $table_days ORDER BY event_date ASC");
 
         $result = [];
 

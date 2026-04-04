@@ -189,36 +189,38 @@ class RestAPI
             $date_key   = date('Y-m-d', strtotime($att->created_at));
             $date_label = date('l, d F Y', strtotime($att->created_at));
 
-            // init group kalau belum ada
+            // init group
             if (!isset($page_content[$date_key])) {
                 $page_content[$date_key] = [
                     'group_title' => $date_label,
                     'group_items' => [
                         [
-                            'left_text'  => '',
+                            'left_text'  => '<table style="width:100%; border-collapse:collapse;">',
                             'right_text' => ''
                         ]
-                    ]
-                ];
+                    ];
             }
 
-            // ambil reference (biar tidak ribet)
-            $index = count($page_content[$date_key]['group_items']) - 1;
+            $index = 0;
 
-            // LEFT TEXT
-            $page_content[$date_key]['group_items'][$index]['left_text'] 
-                .= '<div>- ' . esc_html($att->category_name) . '</div>';
-
-            // STATUS ICON
+            // status icon
             $status_icon = $att->status 
                 ? '<span style="color:green;">✔</span>' 
                 : '<span style="color:red;">✘</span>';
 
-            // RIGHT TEXT
-            $page_content[$date_key]['group_items'][$index]['right_text'] 
-                .= '<div>' 
-                . esc_html($att->time) . ' ' . $status_icon 
-                . '</div>';
+            // append row
+            $page_content[$date_key]['group_items'][$index]['left_text'] .= '
+                <tr>
+                    <td>- ' . esc_html($att->category_name) . '</td>
+                    <td style="text-align:right;">
+                        ' . esc_html($att->time) . ' ' . $status_icon . '
+                    </td>
+                </tr>';
+        }
+
+        // tutup table
+        foreach ($page_content as &$group) {
+            $group['group_items'][0]['left_text'] .= '</table>';
         }
 
         // reset index

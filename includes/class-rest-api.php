@@ -111,7 +111,7 @@ class RestAPI
         $user_id = get_user_by('email', $email)->ID ?? null;
 
 
-        if (!$user) {
+        if (!$user_id) {
             return ['status' => false, 'message' => 'User tidak ditemukan'];
         }
 

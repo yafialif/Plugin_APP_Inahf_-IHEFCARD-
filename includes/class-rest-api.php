@@ -82,8 +82,6 @@ class RestAPI
     {
         global $wpdb;
 
-        $table_days        = $wpdb->prefix . 'event_days';
-        $table_activities  = $wpdb->prefix . 'activities';
         $table_attendence  = $wpdb->prefix . 'attendence';
         $table_category    = $wpdb->prefix . 'categoryAttendence';
         $table_users       = $wpdb->prefix . 'users';

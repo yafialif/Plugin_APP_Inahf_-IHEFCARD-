@@ -120,7 +120,7 @@ class RestAPI
         // =========================
         $category = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT id, activity_id FROM $table_category WHERE uid = %s",
+                "SELECT * FROM $table_category WHERE uid = %s",
                 $code_qr
             )
         );
@@ -146,7 +146,7 @@ class RestAPI
         $wpdb->insert(
             $table_attendence,
             [
-                'id_user'     => $user->ID,
+                'id_user'     => $user_id,
                 'id_category' => $category->id,
                 'type'        => 'checkin',
                 'time'        => current_time('mysql')
@@ -169,7 +169,7 @@ class RestAPI
                     JOIN $table_category cat 
                         ON cat.id = att.category_id
                     WHERE att.id_user = %d",
-                    $user->ID
+                    $user_id
                 )
                 );
 

@@ -171,53 +171,58 @@ class RestAPI
         // =========================
 
 
-                $report = $wpdb->get_results(
-                    $wpdb->prepare(
-                    "SELECT 
-                        att.*,cat.*
-                    FROM $table_attendence att
-                    JOIN $table_category cat 
-                        ON cat.id = att.id_category
-                    WHERE att.id_user = %d",
-                    $user_id
-                )
-                );
+         $report = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT att.*, cat.*
+                FROM $table_attendence att
+                JOIN $table_category cat 
+                    ON cat.id = att.id_category
+                WHERE att.id_user = %d
+                ORDER BY att.created_at ASC",
+                $user_id
+            )
+        );
 
-                $page_content = [];
+        $page_content = [];
 
         foreach ($report as $att) {
 
-            // format tanggal (grouping key)
-            $date_key = date('Y-m-d', strtotime($att->created_at));
-
-            // format display (Wednesday, 30 September 2025)
+            $date_key   = date('Y-m-d', strtotime($att->created_at));
             $date_label = date('l, d F Y', strtotime($att->created_at));
 
-            // kalau tanggal belum ada → init
+            // init group kalau belum ada
             if (!isset($page_content[$date_key])) {
                 $page_content[$date_key] = [
                     'group_title' => $date_label,
-                    'group_items' => []
+                    'group_items' => [
+                        [
+                            'left_text'  => '',
+                            'right_text' => ''
+                        ]
+                    ]
                 ];
             }
 
-            // format time (optional, bisa kamu sesuaikan)
-            $time = $att->time_start && $att->time_end 
-                ? $att->time_start . ' - ' . $att->time_end 
-                : $att->checkin;
+            // ambil reference (biar tidak ribet)
+            $index = count($page_content[$date_key]['group_items']) - 1;
 
-            // push activity
-            $page_content[$date_key]['group_items'][] = [
-                'title'  => $att->category_name,
-                'time'   => $att->time,
-                'prefix' => 'Visited',
-                'suffix' => $att->status 
-                    ? '<p color="green"><b>Done</b></p>' 
-                    : '<p color="red"><b>Pending</b></p>'
-            ];
+            // LEFT TEXT
+            $page_content[$date_key]['group_items'][$index]['left_text'] 
+                .= '<div>- ' . esc_html($att->category_name) . '</div>';
+
+            // STATUS ICON
+            $status_icon = $att->status 
+                ? '<span style="color:green;">✔</span>' 
+                : '<span style="color:red;">✘</span>';
+
+            // RIGHT TEXT
+            $page_content[$date_key]['group_items'][$index]['right_text'] 
+                .= '<div>' 
+                . esc_html($att->time) . ' ' . $status_icon 
+                . '</div>';
         }
 
-        // reset index biar jadi array (bukan object)
+        // reset index
         $page_content = array_values($page_content);
 
         return new WP_REST_Response([

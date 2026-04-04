@@ -159,7 +159,7 @@ class RestAPI
         // =========================
 
 
-                $att = $wpdb->get_results(
+                $report = $wpdb->get_results(
                     $wpdb->prepare(
                     "SELECT 
                         att.*,cat.*
@@ -173,7 +173,7 @@ class RestAPI
 
                 $page_content = [];
 
-        foreach ($existing as $att) {
+        foreach ($report as $att) {
 
             // format tanggal (grouping key)
             $date_key = date('Y-m-d', strtotime($att->created_at));

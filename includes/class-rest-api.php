@@ -84,7 +84,6 @@ class RestAPI
 
         $table_attendence  = $wpdb->prefix . 'attendence';
         $table_category    = $wpdb->prefix . 'categoryAttendence';
-        $table_users       = $wpdb->prefix . 'users';
 
         $params = $request->get_json_params();
         $code_qr  = sanitize_text_field($params['code_qr'] ?? '');
@@ -109,16 +108,9 @@ class RestAPI
 
         $body = json_decode(wp_remote_retrieve_body($response), true);
         $email = sanitize_email($body['email'] ?? '');
+        $user_id = get_user_by('email', $email)->ID ?? null;
 
-        // =========================
-        // GET USER
-        // =========================
-        $user = $wpdb->get_row(
-            $wpdb->prepare(
-                "SELECT ID FROM $table_users WHERE user_email = %s",
-                $email
-            )
-        );
+       
 
         return $user;
 
@@ -148,7 +140,7 @@ class RestAPI
             $wpdb->prepare(
                 "SELECT * FROM $table_attendence 
                 WHERE id_user = %d",
-                $user->ID
+                $user_id
             )
         );
         // =========================

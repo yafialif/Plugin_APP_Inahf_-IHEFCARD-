@@ -74,7 +74,65 @@ class RestAPI
             'permission_callback' => '__return_true', // nanti bisa diamankan pakai API key
         ]);
 
+        add_action('rest_api_init', function () {
+        register_rest_route('ihefcard/v1/content', '/agenda', [
+        'methods'  => 'GET',
+        'callback' => [$this'get_agenda_grouped'],
+        'permission_callback' => '__return_true'
+    ]);
+});
 
+
+    }
+
+    function get_agenda_grouped() {
+
+        $terms = get_terms([
+            'taxonomy'   => 'agenda_category',
+            'hide_empty' => false,
+        ]);
+
+        $result = [];
+
+        foreach ($terms as $term) {
+
+            // ambil semua agenda berdasarkan category
+            $posts = get_posts([
+                'post_type' => 'agenda',
+                'numberposts' => -1,
+                'tax_query' => [
+                    [
+                        'taxonomy' => 'agenda_category',
+                        'field'    => 'term_id',
+                        'terms'    => $term->term_id,
+                    ]
+                ]
+            ]);
+
+            $items = [];
+
+            foreach ($posts as $post) {
+
+                $waktu = get_post_meta($post->ID, '_agenda_waktu', true);
+
+                $items[] = [
+                    'left_text'  => apply_filters('the_content', $post->post_content),
+                    'right_text' => $waktu
+                ];
+            }
+
+            $result[] = [
+                'group_title' => $term->name,
+                'group_items' => $items
+            ];
+        }
+
+        return [
+            'data' => [
+                'page_title'   => 'Agenda',
+                'page_content' => $result
+            ]
+        ];
     }
 
 

@@ -210,7 +210,7 @@ class RestAPI
                 .= '- ' . esc_html($att->category_name) . '</br>';
 
             // STATUS ICON
-            $status_icon = $att->status 
+            $status_icon = $att->time 
                 ? '<span style="color:green;">✔</span></br>' 
                 : '<span style="color:red;">✘</span></br>';
 

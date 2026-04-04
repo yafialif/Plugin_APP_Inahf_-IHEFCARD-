@@ -98,7 +98,7 @@ class RestAPI
             $term_name = is_array($term) ? $term['term_name'] : $term->term_name;
             // ambil semua agenda berdasarkan category
             $posts = get_posts([
-                'post_type' => 'agenda',
+                'post_type' => 'ca_agenda',
                 'numberposts' => -1,
                 'tax_query' => [
                     [

@@ -147,12 +147,12 @@ class RestAPI
         // =========================
         // INSERT
         // =========================
-        // if ($existing > 0) {
-        //     return new \WP_REST_Response([
-        //         'status'  => false,
-        //         'message' => 'Anda sudah melakukan check-in hari ini'
-        //     ], 400);
-        // }
+        if ($existing > 0) {
+            return new \WP_REST_Response([
+                'status'  => false,
+                'message' => 'Anda sudah melakukan check-in'
+            ], 400);
+        }
 
 
         $wpdb->insert(
@@ -166,68 +166,10 @@ class RestAPI
             ['%d', '%d', '%d', '%s', '%s']
         );
 
-        // =========================
-        // BUILD SUMMARY
-        // =========================
-
-
-         $report = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT att.*, cat.*
-                FROM $table_attendence att
-                JOIN $table_category cat 
-                    ON cat.id = att.id_category
-                WHERE att.id_user = %d",
-                $user_id
-            )
-        );
-
-        $page_content = [];
-
-        foreach ($report as $att) {
-
-            $date_key   = date('Y-m-d', strtotime($att->created_at));
-            $date_label = date('l, d F Y', strtotime($att->created_at));
-
-            // init group kalau belum ada
-            if (!isset($page_content[$date_key])) {
-                $page_content[$date_key] = [
-                    'group_title' => $date_label,
-                    'group_items' => [
-                        [
-                            'left_text'  => '',
-                            'right_text' => ''
-                        ]
-                    ]
-                ];
-            }
-
-            // ambil reference (biar tidak ribet)
-            $index = count($page_content[$date_key]['group_items']) - 1;
-
-            // LEFT TEXT
-            $page_content[$date_key]['group_items'][$index]['left_text'] 
-                .= '- ' . esc_html($att->category_name) . '</br>';
-
-            // STATUS ICON
-            $status_icon = $att->time 
-                ? '<span style="color:green;">✔</span></br>' 
-                : '<span style="color:red;">✘</span></br>';
-
-            // RIGHT TEXT
-            $page_content[$date_key]['group_items'][$index]['right_text'] 
-                .= '<div>' 
-                . esc_html($att->time) . ' ' . $status_icon 
-                . '</div>';
-        }
-
-        // reset index
-        $page_content = array_values($page_content);
 
         return new WP_REST_Response([
             'data' => [
-                'page_title'   => 'Summary',
-                'page_content' => $page_content
+                'message'   => 'check-in Berhasil'
             ]
         ], 200);
         

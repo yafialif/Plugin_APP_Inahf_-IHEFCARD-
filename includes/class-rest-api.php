@@ -167,7 +167,7 @@ class RestAPI
                         cat.activity_id
                     FROM $table_attendence att
                     JOIN $table_category cat 
-                        ON cat.id = att.category_id
+                        ON cat.id = att.id_category
                     WHERE att.id_user = %d",
                     $user_id
                 )

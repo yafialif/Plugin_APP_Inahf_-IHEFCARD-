@@ -101,7 +101,7 @@ class RestAPI
                 'numberposts' => -1,
                 'tax_query' => [
                     [
-                        'taxonomy' => 'agenda_category',
+                        'taxonomy' => 'category',
                         'field'    => 'term_id',
                         'terms'    => $term['term_id'],
                     ]

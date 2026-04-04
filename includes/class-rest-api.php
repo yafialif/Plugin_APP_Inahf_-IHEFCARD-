@@ -182,7 +182,6 @@ class RestAPI
                     'prefix'     => 'Visited',
                     'suffix'       => '<p color=\"green\"><b>Done</b></p>'
                 ];
-            }
 
 
         return [

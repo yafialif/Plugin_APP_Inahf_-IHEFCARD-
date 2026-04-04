@@ -37,6 +37,13 @@ class Menu
             'manage_options',
             'edit.php?post_type=ca_faculty'
         );
+         add_submenu_page(
+            self::MENU_SLUG,
+            'Agenda',
+            'Agenda',
+            'manage_options',
+            'edit.php?post_type=ca_agenda'
+        );
     }
 
     public function dashboard()

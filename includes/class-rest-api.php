@@ -164,7 +164,8 @@ class RestAPI
                     "SELECT 
                         att.*, 
                         cat.uid,
-                        cat.activity_id
+                        cat.activity_id,
+                        cat.category_name
                     FROM $table_attendence att
                     JOIN $table_category cat 
                         ON cat.id = att.id_category

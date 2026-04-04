@@ -87,14 +87,15 @@ class RestAPI
     function get_agenda_grouped() {
 
         $terms = get_terms([
-            'taxonomy'   => 'agenda_category',
+            'taxonomy'   => 'category',
             'hide_empty' => false,
         ]);
 
         $result = [];
 
         foreach ($terms as $term) {
-
+            $term_id = is_array($term) ? $term['term_id'] : $term->term_id;
+            $term_name = is_array($term) ? $term['term_name'] : $term->term_name;
             // ambil semua agenda berdasarkan category
             $posts = get_posts([
                 'post_type' => 'agenda',
@@ -103,7 +104,7 @@ class RestAPI
                     [
                         'taxonomy' => 'category',
                         'field'    => 'term_id',
-                        'terms'    => $term->term_id,
+                        'terms'    => $term_id,
                     ]
                 ]
             ]);
@@ -121,7 +122,7 @@ class RestAPI
             }
 
             $result[] = [
-                'group_title' => $term->name,
+                'group_title' => $name,
                 'group_items' => $items
             ];
         }

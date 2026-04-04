@@ -31,6 +31,26 @@ class CPT
             'show_in_rest' => true
         ]);
 
+        register_post_type('ca_agenda', [
+        'labels' => [
+            'name' => 'Agenda',
+            'singular_name' => 'Agenda',
+            'add_new' => 'Tambah Agenda',
+            'add_new_item' => 'Tambah Agenda Baru',
+            'edit_item' => 'Edit Agenda',
+            'all_items' => 'Semua Agenda',
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'menu_icon' => 'dashicons-calendar',
+        'supports' => ['title', 'editor'],
+        'rewrite' => ['slug'=>'agenda'],
+        'taxonomies' => ['category'],
+        'show_in_rest' => true, // penting untuk Gutenberg & API
+        'show_ui' => true,
+        'show_in_menu' => true,
+    ]);
+
         error_log('REGISTER CPT WORKING');
     }
 }

@@ -20,8 +20,24 @@ class Meta
             'normal',
             'default'
         );
+        add_meta_box(
+        'ca_agenda_waktu',
+        'Waktu Agenda',
+        [$this, 'render_waktu_agenda'],
+        'ca_agenda',
+        'side',
+        'high'
+    );
     }
 
+
+    function render_waktu_agenda($post) {
+    $value = get_post_meta($post->ID, '_agenda_waktu', true);
+    ?>
+    <label for="agenda_waktu">Tanggal & Waktu:</label>
+    <input type="datetime-local" name="agenda_waktu" value="<?php echo esc_attr($value); ?>" style="width:100%;" />
+    <?php
+    }
     public function recording_video_callback($post)
     {
         wp_nonce_field('ca_recording_nonce', 'ca_recording_nonce');
@@ -39,6 +55,14 @@ class Meta
 
     public function save_meta($post_id)
     {
+
+        if (array_key_exists('ca_agenda_waktu', $_POST)) {
+        update_post_meta(
+            $post_id,
+            'ca_agenda_waktu',
+            $_POST['ca_agenda_waktu']
+        );
+        }
 
         // Stop autosave
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {

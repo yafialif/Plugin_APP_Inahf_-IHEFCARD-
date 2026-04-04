@@ -112,7 +112,7 @@ class RestAPI
 
             foreach ($posts as $post) {
 
-                $waktu = get_post_meta($post->ID, '_agenda_waktu', true);
+                $waktu = get_post_meta($post->ID, 'ca_agenda_waktu', true);
 
                 $items[] = [
                     'left_text'  => apply_filters('the_content', $post->post_content),

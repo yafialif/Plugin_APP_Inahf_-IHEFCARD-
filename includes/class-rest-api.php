@@ -198,8 +198,8 @@ class RestAPI
 
             // push activity
             $page_content[$date_key]['group_items'][] = [
-                'title'  => $att->title,
-                'time'   => $time,
+                'title'  => $att->category_name,
+                'time'   => $att->time,
                 'prefix' => 'Visited',
                 'suffix' => $att->status 
                     ? '<p color="green"><b>Done</b></p>' 

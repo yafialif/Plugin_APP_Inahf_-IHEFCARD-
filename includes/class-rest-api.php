@@ -325,8 +325,7 @@ class RestAPI
     public function get_attendee_summary(\WP_REST_Request $request) {
     global $wpdb;
 
-    $table_days       = $wpdb->prefix . 'event_days';
-    $table_activities = $wpdb->prefix . 'activities';
+    $table_category = $wpdb->prefix . 'categoryAttendence';
     $table_attendence = $wpdb->prefix . 'attendence';
 
     $params = $request->get_json_params();
@@ -399,8 +398,8 @@ class RestAPI
 
         foreach ($report as $att) {
 
-            $date_key   = date('Y-m-d', strtotime($att->created_at));
-            $date_label = date('l, d F Y', strtotime($att->created_at));
+            $date_key   = date('Y-m-d', strtotime($att->time));
+            $date_label = date('l, d F Y', strtotime($att->time));
 
             // init group kalau belum ada
             if (!isset($page_content[$date_key])) {

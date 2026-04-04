@@ -75,7 +75,7 @@ class RestAPI
         ]);
 
         
-        register_rest_route('ihefcard/v1/content', '/agenda', [
+        register_rest_route('ihefcard/v1/content', '/schedule', [
         'methods'  => 'GET',
         'callback' => [$this,'get_agenda_grouped'],
         'permission_callback' => '__return_true'

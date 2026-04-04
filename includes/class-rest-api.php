@@ -133,16 +133,28 @@ class RestAPI
         // =========================
         // CHECK ATTENDANCE
         // =========================
-        $existing = $wpdb->get_results(
+        $today = current_time('Y-m-d');
+
+        $existing = $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT * FROM $table_attendence 
-                WHERE id_user = %d",
-                $user_id
+                "SELECT COUNT(*) FROM $table_attendence 
+                WHERE id_user = %d
+                AND DATE(time) = %s",
+                $user_id,
+                $today
             )
         );
         // =========================
         // INSERT
         // =========================
+        if ($existing > 0) {
+            return new \WP_REST_Response([
+                'status'  => false,
+                'message' => 'Anda sudah melakukan check-in hari ini'
+            ], 400);
+        }
+
+
         $wpdb->insert(
             $table_attendence,
             [

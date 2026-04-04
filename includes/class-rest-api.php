@@ -162,10 +162,7 @@ class RestAPI
                 $att = $wpdb->get_results(
                     $wpdb->prepare(
                     "SELECT 
-                        att.*, 
-                        cat.uid,
-                        cat.activity_id,
-                        cat.category_name
+                        att.*,cat.*
                     FROM $table_attendence att
                     JOIN $table_category cat 
                         ON cat.id = att.id_category

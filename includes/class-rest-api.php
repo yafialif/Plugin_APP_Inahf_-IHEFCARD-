@@ -379,62 +379,71 @@ class RestAPI
 
     $user_id = $user->ID;
 
-    // ========================
-    // GET ALL DAYS
-    // ========================
-    $days = $wpdb->get_results("SELECT * FROM $table_days ORDER BY event_date ASC");
+    // =========================
+        // BUILD SUMMARY
+        // =========================
 
-    $result = [];
 
-    foreach ($days as $day) {
+         $report = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT att.*, cat.*
+                FROM $table_attendence att
+                JOIN $table_category cat 
+                    ON cat.id = att.id_category
+                WHERE att.id_user = %d",
+                $user_id
+            )
+        );
 
-        // format tanggal seperti JSON
-        $formatted_date = date('l, d F Y', strtotime($day->event_date));
+        $page_content = [];
 
-        // ========================
-        // GET ACTIVITIES PER DAY
-        // ========================
-        $activities = $wpdb->get_results($wpdb->prepare(
-            "SELECT * FROM $table_activities WHERE event_day_id = %d",
-            $day->id
-        ));
+        foreach ($report as $att) {
 
-        $activity_list = [];
+            $date_key   = date('Y-m-d', strtotime($att->created_at));
+            $date_label = date('l, d F Y', strtotime($att->created_at));
 
-        foreach ($activities as $act) {
+            // init group kalau belum ada
+            if (!isset($page_content[$date_key])) {
+                $page_content[$date_key] = [
+                    'group_title' => $date_label,
+                    'group_items' => [
+                        [
+                            'left_text'  => '',
+                            'right_text' => ''
+                        ]
+                    ]
+                ];
+            }
 
-            // ========================
-            // CEK ATTENDANCE
-            // ========================
-            $attend = $wpdb->get_var($wpdb->prepare(
-                "SELECT COUNT(*) FROM $table_attendence 
-                 WHERE id_user = %d AND activity_id = %d",
-                $user_id,
-                $act->id
-            ));
+            // ambil reference (biar tidak ribet)
+            $index = count($page_content[$date_key]['group_items']) - 1;
 
-            $activity_list[] = [
-                "title"       => $act->title,
-                "time_start"  => $act->time_start,
-                "time_end"    => $act->time_end,
-                "checkin"     => $act->checkin,
-                "status"      => $attend > 0 ? true : false,
-                "type"        => $act->type
-            ];
+            // LEFT TEXT
+            $page_content[$date_key]['group_items'][$index]['left_text'] 
+                .= '- ' . esc_html($att->category_name) . '</br>';
+
+            // STATUS ICON
+            $status_icon = $att->time 
+                ? '<span style="color:green;">✔</span></br>' 
+                : '<span style="color:red;">✘</span></br>';
+
+            // RIGHT TEXT
+            $page_content[$date_key]['group_items'][$index]['right_text'] 
+                .= '<div>' 
+                . esc_html($att->time) . ' ' . $status_icon 
+                . '</div>';
         }
 
-        $result[] = [
-            "date" => $formatted_date,
-            "activities" => $activity_list
-        ];
-    }
+        // reset index
+        $page_content = array_values($page_content);
 
-    return new WP_REST_Response([
-        "data" => [
-            "page_title" => "Summary",
-            "page_content" => $result
-        ]
-    ], 200);
+        return new WP_REST_Response([
+            'data' => [
+                'page_title'   => 'Summary',
+                'page_content' => $page_content
+            ]
+        ], 200);
+        
 }
 
 

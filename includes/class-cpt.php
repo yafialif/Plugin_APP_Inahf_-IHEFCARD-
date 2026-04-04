@@ -43,7 +43,7 @@ class CPT
         'menu_icon' => 'dashicons-calendar',
         'supports' => ['title', 'editor'],
         'rewrite' => ['slug'=>'agenda'],
-        'taxonomies' => ['category'],
+        'taxonomies' => ['agenda_category'],
         'show_in_rest' => true, // penting untuk Gutenberg & API
         'show_ui' => true,
     ]);

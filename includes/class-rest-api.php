@@ -122,6 +122,8 @@ class RestAPI
             )
         );
 
+        return $user;
+
         if (!$user) {
             return ['status' => false, 'message' => 'User tidak ditemukan'];
         }

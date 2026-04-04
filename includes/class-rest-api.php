@@ -149,8 +149,11 @@ class RestAPI
         // =========================
         if ($existing > 0) {
             return new \WP_REST_Response([
-                'status'  => false,
-                'message' => 'Anda sudah melakukan check-in'
+                'data' =>[
+                    'status'  => false,
+                    'message' => 'Anda sudah melakukan check-in'
+                ]
+                
             ], 400);
         }
 

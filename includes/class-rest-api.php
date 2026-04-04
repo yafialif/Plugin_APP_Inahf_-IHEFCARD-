@@ -198,7 +198,7 @@ class RestAPI
                             'left_text'  => '<table style="width:100%; border-collapse:collapse;">',
                             'right_text' => ''
                         ]
-                    ];
+                    ]
             }
 
             $index = 0;

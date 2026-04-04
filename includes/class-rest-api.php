@@ -140,21 +140,6 @@ class RestAPI
             return ['status' => false, 'message' => 'QR tidak valid'];
         }
 
-        $activity_id = $category->activity_id;
-
-        if (!$activity_id) {
-            return ['status' => false, 'message' => 'Category tidak punya activity'];
-        }
-
-        // =========================
-        // GET ACTIVITY TYPE
-        // =========================
-        $activity = $wpdb->get_row(
-            $wpdb->prepare(
-                "SELECT type FROM $table_activities WHERE id = %d",
-                $activity_id
-            )
-        );
 
         // =========================
         // CHECK ATTENDANCE
@@ -162,32 +147,10 @@ class RestAPI
         $existing = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT * FROM $table_attendence 
-                WHERE id_user = %d AND activity_id = %d",
-                $user->ID,
-                $activity_id
+                WHERE id_user = %d",
+                $user->ID
             )
         );
-
-        // =========================
-        // LOGIC CHECKIN / CHECKOUT
-        // =========================
-        if ($activity->type === 'session') {
-
-            if (count($existing) >= 2) {
-                return ['status' => false, 'message' => 'Sudah check-in & check-out'];
-            }
-
-            $type = count($existing) == 0 ? 'checkin' : 'checkout';
-
-        } else {
-
-            if (!empty($existing)) {
-                return ['status' => false, 'message' => 'Sudah check-in'];
-            }
-
-            $type = 'checkin';
-        }
-
         // =========================
         // INSERT
         // =========================
@@ -196,8 +159,7 @@ class RestAPI
             [
                 'id_user'     => $user->ID,
                 'id_category' => $category->id,
-                'activity_id' => $activity_id,
-                'type'        => $type,
+                'type'        => 'checkin',
                 'time'        => current_time('mysql')
             ],
             ['%d', '%d', '%d', '%s', '%s']
@@ -206,55 +168,30 @@ class RestAPI
         // =========================
         // BUILD SUMMARY
         // =========================
-        $days = $wpdb->get_results("SELECT * FROM $table_days ORDER BY event_date ASC");
 
-        $result = [];
-
-        foreach ($days as $day) {
-
-            $activities = $wpdb->get_results(
-                $wpdb->prepare(
-                    "SELECT * FROM $table_activities WHERE day_id = %d",
-                    $day->id
-                )
-            );
-
-            $activity_list = [];
-
-            foreach ($activities as $act) {
 
                 $att = $wpdb->get_results(
                     $wpdb->prepare(
-                        "SELECT * FROM $table_attendence
-                        WHERE id_user = %d AND activity_id = %d",
-                        $user->ID,
-                        $act->id
-                    )
+                    "SELECT 
+                        att.*, 
+                        cat.uid,
+                        cat.activity_id
+                    FROM $table_attendence att
+                    JOIN $table_category cat 
+                        ON cat.id = att.category_id
+                    WHERE att.id_user = %d",
+                    $user->ID
+                )
                 );
 
-                $checkin = null;
-
-                foreach ($att as $a) {
-                    if ($a->type === 'checkin') {
-                        $checkin = date('H:i', strtotime($a->time));
-                    }
-                }
-
-                $activity_list[] = [
-                    'title'      => $act->title,
-                    'time_start' => $act->time_start ?: null,
-                    'time_end'   => $act->time_end ?: null,
-                    'checkin'    => $checkin,
-                    'status'     => !empty($att) ? true : null,
-                    'type'       => $act->type
+                $result = [
+                    'title'      => $att->title,
+                    'time'    => $att->time,
+                    'prefix'     => 'Visited',
+                    'suffix'       => '<p color=\"green\"><b>Done</b></p>'
                 ];
             }
 
-            $result[] = [
-                'date'       => date('l, d F Y', strtotime($day->event_date)),
-                'activities' => $activity_list
-            ];
-        }
 
         return [
             'data' => [

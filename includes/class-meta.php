@@ -32,10 +32,10 @@ class Meta
 
 
     function render_waktu_agenda($post) {
-    $value = get_post_meta($post->ID, '_agenda_waktu', true);
+    $value = get_post_meta($post->ID, 'ca_agenda_waktu', true);
     ?>
-    <label for="agenda_waktu">Tanggal & Waktu:</label>
-    <input type="datetime-local" name="agenda_waktu" value="<?php echo esc_attr($value); ?>" style="width:100%;" />
+    <label for="ca_agenda_waktu">Waktu:</label>
+    <input type="text" name="ca_agenda_waktu" value="<?php echo esc_attr($value); ?>" style="width:100%;" />
     <?php
     }
     public function recording_video_callback($post)

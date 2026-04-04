@@ -184,12 +184,13 @@ class RestAPI
                 ];
 
 
-        return [
+        return new WP_REST_Response([
             'data' => [
                 'page_title'   => 'Summary',
                 'page_content' => $result
             ]
-        ];
+        ], 200);
+        
     }
 
     // Create User

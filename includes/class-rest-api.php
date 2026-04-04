@@ -186,8 +186,8 @@ class RestAPI
 
         foreach ($report as $att) {
 
-            $date_key   = date('Y-m-d', strtotime($att->created_at));
-            $date_label = date('l, d F Y', strtotime($att->created_at));
+            $date_key   = date('Y-m-d', strtotime($att->time));
+            $date_label = date('l, d F Y', strtotime($att->time));
 
             // init group
             if (!isset($page_content[$date_key])) {

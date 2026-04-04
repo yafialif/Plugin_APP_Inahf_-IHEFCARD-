@@ -122,7 +122,7 @@ class RestAPI
             }
 
             $result[] = [
-                'group_title' => $name,
+                'group_title' => $term_name,
                 'group_items' => $items
             ];
         }

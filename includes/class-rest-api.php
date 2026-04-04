@@ -110,9 +110,6 @@ class RestAPI
         $email = sanitize_email($body['email'] ?? '');
         $user_id = get_user_by('email', $email)->ID ?? null;
 
-       
-
-        return $user;
 
         if (!$user) {
             return ['status' => false, 'message' => 'User tidak ditemukan'];

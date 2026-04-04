@@ -186,8 +186,8 @@ class RestAPI
             // kalau tanggal belum ada → init
             if (!isset($page_content[$date_key])) {
                 $page_content[$date_key] = [
-                    'date' => $date_label,
-                    'activities' => []
+                    'group_title' => $date_label,
+                    'group_items' => []
                 ];
             }
 

@@ -197,7 +197,7 @@ class RestAPI
                 : $att->checkin;
 
             // push activity
-            $page_content[$date_key]['activities'][] = [
+            $page_content[$date_key]['group_items'][] = [
                 'title'  => $att->title,
                 'time'   => $time,
                 'prefix' => 'Visited',

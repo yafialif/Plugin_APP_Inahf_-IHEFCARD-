@@ -103,7 +103,7 @@ class RestAPI
                     [
                         'taxonomy' => 'category',
                         'field'    => 'term_id',
-                        'terms'    => $term['term_id'],
+                        'terms'    => $term->term_id,
                     ]
                 ]
             ]);
@@ -121,7 +121,7 @@ class RestAPI
             }
 
             $result[] = [
-                'group_title' => $term['name'],
+                'group_title' => $term->name,
                 'group_items' => $items
             ];
         }

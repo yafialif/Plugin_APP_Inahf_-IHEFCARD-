@@ -186,41 +186,39 @@ class RestAPI
 
         foreach ($report as $att) {
 
-            $date_key   = date('Y-m-d', strtotime($att->time));
-            $date_label = date('l, d F Y', strtotime($att->time));
+            $date_key   = date('Y-m-d', strtotime($att->created_at));
+            $date_label = date('l, d F Y', strtotime($att->created_at));
 
-            // init group
+            // init group kalau belum ada
             if (!isset($page_content[$date_key])) {
                 $page_content[$date_key] = [
                     'group_title' => $date_label,
                     'group_items' => [
                         [
-                            'left_text'  => '<table style="width:100%; border-collapse:collapse;">',
+                            'left_text'  => '',
                             'right_text' => ''
                         ]
                     ]
+                ];
             }
 
-            $index = 0;
+            // ambil reference (biar tidak ribet)
+            $index = count($page_content[$date_key]['group_items']) - 1;
 
-            // status icon
+            // LEFT TEXT
+            $page_content[$date_key]['group_items'][$index]['left_text'] 
+                .= '- ' . esc_html($att->category_name) . '</br>';
+
+            // STATUS ICON
             $status_icon = $att->status 
-                ? '<span style="color:green;">✔</span>' 
-                : '<span style="color:red;">✘</span>';
+                ? '<span style="color:green;">✔</span></br>' 
+                : '<span style="color:red;">✘</span></br>';
 
-            // append row
-            $page_content[$date_key]['group_items'][$index]['left_text'] .= '
-                <tr>
-                    <td>- ' . esc_html($att->category_name) . '</td>
-                    <td style="text-align:right;">
-                        ' . esc_html($att->time) . ' ' . $status_icon . '
-                    </td>
-                </tr>';
-        }
-
-        // tutup table
-        foreach ($page_content as &$group) {
-            $group['group_items'][0]['left_text'] .= '</table>';
+            // RIGHT TEXT
+            $page_content[$date_key]['group_items'][$index]['right_text'] 
+                .= '<div>' 
+                . esc_html($att->time) . ' ' . $status_icon 
+                . '</div>';
         }
 
         // reset index

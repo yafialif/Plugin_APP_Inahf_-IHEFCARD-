@@ -177,8 +177,7 @@ class RestAPI
                 FROM $table_attendence att
                 JOIN $table_category cat 
                     ON cat.id = att.id_category
-                WHERE att.id_user = %d
-                ORDER BY att.created_at ASC",
+                WHERE att.id_user = %d",
                 $user_id
             )
         );

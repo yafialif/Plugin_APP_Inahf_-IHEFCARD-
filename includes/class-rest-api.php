@@ -154,7 +154,7 @@ class RestAPI
                     'message' => 'Anda sudah melakukan check-in'
                 ]
                 
-            ], 400);
+            ], 200);
         }
 
 

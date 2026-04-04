@@ -147,12 +147,12 @@ class RestAPI
         // =========================
         // INSERT
         // =========================
-        if ($existing > 0) {
-            return new \WP_REST_Response([
-                'status'  => false,
-                'message' => 'Anda sudah melakukan check-in hari ini'
-            ], 400);
-        }
+        // if ($existing > 0) {
+        //     return new \WP_REST_Response([
+        //         'status'  => false,
+        //         'message' => 'Anda sudah melakukan check-in hari ini'
+        //     ], 400);
+        // }
 
 
         $wpdb->insert(

@@ -74,15 +74,14 @@ class RestAPI
             'permission_callback' => '__return_true', // nanti bisa diamankan pakai API key
         ]);
 
-        add_action('rest_api_init', function () {
+        
         register_rest_route('ihefcard/v1/content', '/agenda', [
         'methods'  => 'GET',
         'callback' => [$this,'get_agenda_grouped'],
         'permission_callback' => '__return_true'
     ]);
-});
 
-
+    
     }
 
     function get_agenda_grouped() {

@@ -173,18 +173,47 @@ class RestAPI
                 )
                 );
 
-                $result = [
-                    'title'      => $att->title,
-                    'time'    => $att->time,
-                    'prefix'     => 'Visited',
-                    'suffix'       => '<p color=\"green\"><b>Done</b></p>'
-                ];
+                $page_content = [];
 
+        foreach ($existing as $att) {
+
+            // format tanggal (grouping key)
+            $date_key = date('Y-m-d', strtotime($att->created_at));
+
+            // format display (Wednesday, 30 September 2025)
+            $date_label = date('l, d F Y', strtotime($att->created_at));
+
+            // kalau tanggal belum ada → init
+            if (!isset($page_content[$date_key])) {
+                $page_content[$date_key] = [
+                    'date' => $date_label,
+                    'activities' => []
+                ];
+            }
+
+            // format time (optional, bisa kamu sesuaikan)
+            $time = $att->time_start && $att->time_end 
+                ? $att->time_start . ' - ' . $att->time_end 
+                : $att->checkin;
+
+            // push activity
+            $page_content[$date_key]['activities'][] = [
+                'title'  => $att->title,
+                'time'   => $time,
+                'prefix' => 'Visited',
+                'suffix' => $att->status 
+                    ? '<p color="green"><b>Done</b></p>' 
+                    : '<p color="red"><b>Pending</b></p>'
+            ];
+        }
+
+        // reset index biar jadi array (bukan object)
+        $page_content = array_values($page_content);
 
         return new WP_REST_Response([
             'data' => [
                 'page_title'   => 'Summary',
-                'page_content' => $result
+                'page_content' => $page_content
             ]
         ], 200);
         

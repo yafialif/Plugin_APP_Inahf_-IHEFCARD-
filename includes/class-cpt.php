@@ -15,7 +15,6 @@ class CPT
             'label' => 'Recordings',
             'public' => true,
             'show_ui' => true,
-            'show_in_menu' => true,
             'supports' => ['title','editor','thumbnail'],
             'rewrite' => ['slug'=>'recording'],
             'show_in_rest' => true
@@ -25,7 +24,6 @@ class CPT
             'label' => 'Faculty',
             'public' => true,
             'show_ui' => true,
-            'show_in_menu' => true,
             'supports' => ['title','editor','thumbnail'],
             'rewrite' => ['slug'=>'faculty'],
             'show_in_rest' => true
@@ -48,7 +46,6 @@ class CPT
         'taxonomies' => ['category'],
         'show_in_rest' => true, // penting untuk Gutenberg & API
         'show_ui' => true,
-        'show_in_menu' => true,
     ]);
 
         error_log('REGISTER CPT WORKING');

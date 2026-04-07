@@ -577,7 +577,11 @@ class RestAPI
                             "image_url":"https://ihefcard.com/assets/images/gallery/image-5.webp",
                             "title": "Any title here"
                             }
-                        ]
+                        ],
+                        "cta": {
+                            "title": "See all",
+                            "route_url": ""
+                        }
                        
                     }
                 },

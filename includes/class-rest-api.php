@@ -556,12 +556,29 @@ class RestAPI
                     "payload": {
                        "title": "Our incredible moments",
                         "subtitle": null,
-                        "images_url": [
-                            "https://ihefcard.com/assets/images/gallery/image-2.webp",
-                            "https://ihefcard.com/assets/images/gallery/image-10.webp",
-                            "https://ihefcard.com/assets/images/gallery/image-5.webp",
-                            "https://ihefcard.com/assets/images/gallery/image-5.webp"
+                        "list":[
+                            {
+                            "id":1,
+                            "image_url":"https://ihefcard.com/assets/images/gallery/image-2.webp",
+                            "title": "Any title here"
+                            },
+                            {
+                            "id":1,
+                            "image_url":"https://ihefcard.com/assets/images/gallery/image-10.webp",
+                            "title": "Any title here"
+                            },
+                            {
+                            "id":1,
+                            "image_url":"https://ihefcard.com/assets/images/gallery/image-5.webp",
+                            "title": "Any title here"
+                            },
+                            {
+                            "id":1,
+                            "image_url":"https://ihefcard.com/assets/images/gallery/image-5.webp",
+                            "title": "Any title here"
+                            }
                         ]
+                       
                     }
                 },
                 {

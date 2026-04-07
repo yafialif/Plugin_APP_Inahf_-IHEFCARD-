@@ -516,37 +516,37 @@ class RestAPI
                                     "icon": "https://www.google.com",
                                     "name": "InaHF",
                                     "type": "inahf",
-                                    "page_route": null
+                                    "route_url": "/"
                                 },
                                 {
                                     "icon": "https://www.google.com",
                                     "name": "Committee",
                                     "type": "webview",
-                                    "page_route": "https://ihefcard.com/committee"
+                                    "route_url": "https://ihefcard.com/committee"
                                 },
                                 {
                                     "icon": "https://www.google.com",
                                     "name": "Package",
                                     "type": "package",
-                                    "page_route": null
+                                    "route_url": "/package/list"
                                 },
                                 {
                                     "icon": "https://www.google.com",
                                     "name": "Recording",
                                     "type": "recording",
-                                    "page_route": null
+                                    "route_url": "/recording/list"
                                 },
                                 {
                                     "icon": "https://www.google.com",
                                     "name": "Speakers",
                                     "type": "speakers",
-                                    "page_route": null
+                                    "route_url": "/speaker/list"
                                 },
                                 {
                                     "icon": "https://www.google.com",
                                     "name": "Satu Sehat",
-                                    "type": "satusehat",
-                                    "page_route": "https://lms.kemkes.go.id/"
+                                    "type": "webview",
+                                    "route_url": "https://lms.kemkes.go.id/"
                                 }
                             ]
                     }

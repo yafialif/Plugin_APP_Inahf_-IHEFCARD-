@@ -468,7 +468,7 @@ class RestAPI
                 $faculty[] = array(
                     "name" => get_the_title(),
                     "image_url" => get_the_post_thumbnail_url(get_the_ID(), 'full'),
-                    "page_route" => get_permalink()
+                    "route_url" => get_permalink()
                 );
             }
         }
@@ -563,17 +563,17 @@ class RestAPI
                             "title": "Any title here"
                             },
                             {
-                            "id":1,
+                            "id":2,
                             "image_url":"https://ihefcard.com/assets/images/gallery/image-10.webp",
                             "title": "Any title here"
                             },
                             {
-                            "id":1,
+                            "id":3,
                             "image_url":"https://ihefcard.com/assets/images/gallery/image-5.webp",
                             "title": "Any title here"
                             },
                             {
-                            "id":1,
+                            "id":4,
                             "image_url":"https://ihefcard.com/assets/images/gallery/image-5.webp",
                             "title": "Any title here"
                             }

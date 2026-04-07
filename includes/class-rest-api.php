@@ -580,7 +580,7 @@ class RestAPI
                         ],
                         "cta": {
                             "title": "See all",
-                            "route_url": ""
+                            "route_url": "https://ihefcard.com/gallery"
                         }
                        
                     }

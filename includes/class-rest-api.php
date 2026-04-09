@@ -95,6 +95,11 @@ class RestAPI
 
     public function handle_midtrans_webhook(\WP_REST_Request $request)
     {
+
+        return new WP_REST_Response([
+                'status' => true,
+                'message' => 'berhasil'
+            ], 200);
         $server_key = 'SB-Mid-server-j8HvvpqZ3TY1m0M5xlAyTbJo'; // penting!
 
         $data = $request->get_json_params();

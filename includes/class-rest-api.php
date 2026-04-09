@@ -82,6 +82,108 @@ class RestAPI
     ]);
 
 
+     register_rest_route('midtrans/v1', '/webhook', [
+        'methods'  => 'POST',
+        'callback' => [$this,'handle_midtrans_webhook'],
+        'permission_callback' => '__return_true'
+        ]);
+
+        
+        
+    }
+    
+
+    public function handle_midtrans_webhook(\WP_REST_Request $request)
+    {
+        $server_key = 'SB-Mid-server-j8HvvpqZ3TY1m0M5xlAyTbJo'; // penting!
+
+        $data = $request->get_json_params();
+
+        // Ambil data penting
+        $order_id      = $data['order_id'] ?? null;
+        $status_code   = $data['status_code'] ?? null;
+        $gross_amount  = $data['gross_amount'] ?? null;
+        $signature_key = $data['signature_key'] ?? null;
+        $transaction_status = $data['transaction_status'] ?? null;
+        $fraud_status  = $data['fraud_status'] ?? null;
+
+        // Validasi basic
+        if (!$order_id || !$signature_key) {
+            return new WP_REST_Response([
+                'status' => false,
+                'message' => 'Invalid payload'
+            ], 400);
+        }
+
+        // 🔐 Validasi Signature Midtrans
+        $generated_signature = hash('sha512',
+            $order_id . $status_code . $gross_amount . $server_key
+        );
+
+        if ($signature_key !== $generated_signature) {
+            return new WP_REST_Response([
+                'status' => false,
+                'message' => 'Invalid signature'
+            ], 403);
+        }
+
+         // Pastikan WooCommerce ke-load
+        if (!class_exists('WooCommerce')) {
+            include_once WP_PLUGIN_DIR . '/woocommerce/woocommerce.php';
+        }
+
+        if (!function_exists('wc_get_order')) {
+            include_once WP_PLUGIN_DIR . '/woocommerce/includes/wc-order-functions.php';
+        }
+
+        $order = \wc_get_order($order_id); // tetap pakai \
+
+
+        if (!$order) {
+            return new WP_REST_Response([
+                'status' => false,
+                'message' => 'Order tidak ditemukan'
+            ], 404);
+        }
+
+        // 🚀 Logic status
+        if ($transaction_status == 'settlement' || 
+            ($transaction_status == 'capture' && $fraud_status == 'accept')) {
+
+            // Hindari double proses
+            if ($order->get_status() !== 'completed') {
+
+                // Complete order
+                $order->payment_complete();
+
+                // Optional: set langsung completed
+                $order->update_status('completed', 'Midtrans payment success');
+
+                // Tambahan: simpan VA / bank
+                if (!empty($data['va_numbers'][0]['va_number'])) {
+                    update_post_meta($order_id, '_va_number', $data['va_numbers'][0]['va_number']);
+                    update_post_meta($order_id, '_bank', $data['va_numbers'][0]['bank']);
+                }
+
+                // Tambahan: simpan transaction id
+                update_post_meta($order_id, '_transaction_id_midtrans', $data['transaction_id']);
+            }
+
+            return [
+                'status' => true,
+                'message' => 'Order completed'
+            ];
+        }
+
+        // ❌ Pending / expire / cancel
+        if (in_array($transaction_status, ['cancel', 'expire', 'deny'])) {
+            $order->update_status('cancelled', 'Midtrans payment failed');
+        }
+
+        return [
+            'status' => true,
+            'message' => 'Webhook received'
+        ];
     }
 
     function get_agenda_grouped() {

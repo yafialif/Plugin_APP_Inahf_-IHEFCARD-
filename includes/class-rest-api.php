@@ -127,11 +127,7 @@ class RestAPI
         $body = wp_remote_retrieve_body($response);
         $data = json_decode($body, true);
         
-        //  return new WP_REST_Response([
-        //         'status' => false,
-        //         'message' => 'data',
-        //         'payload' => $data
-        //     ], 200);
+        
 
         if ($data['transaction_status'] === 'settlement') {
 
@@ -155,6 +151,11 @@ class RestAPI
             // 👤 Update role user
             $user_id = $order->get_user_id();
             $email = $order->get_billing_email();
+ return new WP_REST_Response([
+                'status' => false,
+                'message' => 'data',
+                'payload' => $email
+            ], 200);
             $role;
             if ($user_id) {
                 $user = new \WP_User($user_id);

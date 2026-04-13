@@ -1002,10 +1002,9 @@ class RestAPI
                 "callbacks" => [
                     // "finish" => "https://ihefcard.inahfcarmet.org/checkout/order-received/".$order_id."/?key=".$order_key,
                     "finish"=>"inahf://payment/success?orderId=".$order_id,
-                    "unfinish" => "inahf://package/list",
-                    "error" => "inahf://package/list"
+                    "unfinish" => "https://ihefcard.inahfcarmet.org/checkout/order-pay/".$order_id."/?pay_for_order=true&key=".$order_key,
+                    "error" => "https://ihefcard.inahfcarmet.org/checkout/order-pay/".$order_id."/?pay_for_order=true&key=".$order_key
                 ]
-
             ];
 
             $snap = \WC_Midtrans_API::createSnapTransactionHandleDuplicate(

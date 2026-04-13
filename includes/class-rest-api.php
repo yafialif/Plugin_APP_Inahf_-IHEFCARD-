@@ -127,11 +127,11 @@ class RestAPI
         $body = wp_remote_retrieve_body($response);
         $data = json_decode($body, true);
         
-         return new WP_REST_Response([
-                'status' => false,
-                'message' => 'data',
-                'payload' => $data
-            ], 200);
+        //  return new WP_REST_Response([
+        //         'status' => false,
+        //         'message' => 'data',
+        //         'payload' => $data
+        //     ], 200);
 
         if ($data['transaction_status'] === 'settlement') {
 

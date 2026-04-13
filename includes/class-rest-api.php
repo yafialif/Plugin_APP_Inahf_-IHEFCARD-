@@ -89,7 +89,7 @@ class RestAPI
         ]);
 
         register_rest_route('payment/v1', '/status', [
-        'methods'  => 'POST',
+        'methods'  => 'GET',
         'callback' => [$this,'payment_status'],
         'permission_callback' => '__return_true'
         ]);

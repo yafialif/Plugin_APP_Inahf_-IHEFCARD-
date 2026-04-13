@@ -1000,10 +1000,9 @@ class RestAPI
                     "email" => $email
                 ],
                 "callbacks" => [
-                    // "finish" => "https://ihefcard.inahfcarmet.org/checkout/order-received/".$order_id."/?key=".$order_key,
-                    "finish"=>"inahf://ihefcard?shoulcBack=true",
-                    "unfinish" => "inahf://ihefcard?shoulcBack=true",
-                    "error" => "inahf://ihefcard?shoulcBack=true"
+                    "finish"=>"inahf://ihefcard?shouldBack=true&order_id=".$order->get_id(),
+                    "unfinish" => "inahf://ihefcard?shouldBack=true&order_id=".$order->get_id(),
+                    "error" => "inahf://ihefcard?shouldBack=true&order_id=".$order->get_id()
                 ]
             ];
 
@@ -1018,7 +1017,7 @@ class RestAPI
             $order->update_meta_data('_mt_snap_token', $snap->token);
             $order->update_meta_data('_mt_redirect_url', $snap->redirect_url);
             $order->update_meta_data('_mt_transaction_id', $params['transaction_details']['order_id']);
-            $order->update_meta_data('_mt_deep_link', 'inahf://payment/success?orderId='.$order_id);
+            $order->update_meta_data('_mt_deep_link', 'inahf://ihefcard?shouldBack=true');
             $order->save();
 
             return [

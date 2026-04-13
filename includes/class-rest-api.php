@@ -1001,9 +1001,9 @@ class RestAPI
                 ],
                 "callbacks" => [
                     // "finish" => "https://ihefcard.inahfcarmet.org/checkout/order-received/".$order_id."/?key=".$order_key,
-                    "finish"=>"inahf://payment/success?orderId=".$order_id,
-                    "unfinish" => "/package/list?shouldBack=true",
-                    "error" => "/package/list?shouldBack=true"
+                    "finish"=>"/ihefcard?shoulcBack=true",
+                    "unfinish" => "/ihefcard?shoulcBack=true",
+                    "error" => "/ihefcard?shoulcBack=true"
                 ]
             ];
 

@@ -128,7 +128,7 @@ class RestAPI
          return new WP_REST_Response([
                 'status' => false,
                 'message' => 'data',
-                'payload' => $data->transaction_status
+                'payload' => $data['transaction_status']
             ], 200);
 
         if ($data->transaction_status === 'settlement') {

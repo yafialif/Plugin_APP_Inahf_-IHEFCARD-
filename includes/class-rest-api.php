@@ -133,7 +133,7 @@ class RestAPI
         //         'payload' => $data
         //     ], 200);
 
-        if ($data['transaction_status'] == 'settlement') {
+        if ($data['transaction_status'] === 'settlement') {
 
 
             // 📦 Ambil order
@@ -158,16 +158,14 @@ class RestAPI
             $role;
             if ($user_id) {
                 $user = new \WP_User($user_id);
-                if($email == 'guest@inahf.com'){
+                if ($email == 'guest@inahf.com') {
                     $role = 'um_audience';
-                    $user->set_role('um_audience');
-                   
+                } else {
+                    $role = 'um_official';
                 }
-                
-                
-                $user->set_role('um_official');
-                $role='um_official';
-                $response2 = wp_remote_get('https://inahfcarmet.org/wp-json/custom/v1/update-role', [
+
+                $user->set_role($role);
+                $response2 = wp_remote_post('https://inahfcarmet.org/wp-json/custom/v1/update-role', [
                     'headers' => [
                         'Accept' => 'application/json',
                         'authorization'=>'InahfCarmet2026'

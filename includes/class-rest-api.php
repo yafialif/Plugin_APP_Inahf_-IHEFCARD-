@@ -132,7 +132,7 @@ class RestAPI
             if (!$order){
                  return new WP_REST_Response([
                 'status' => false,
-                'message' => 'Order Not Found'
+                'message' => 'Order Not Found',
                 'payload' => $order_id
             ], 200);
             };

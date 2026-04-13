@@ -1000,9 +1000,9 @@ class RestAPI
                     "email" => $email
                 ],
                 "callbacks" => [
-                    "finish"=>"inahf://ihefcard?shouldBack=true&order_id=".$order->get_id(),
-                    "unfinish" => "inahf://ihefcard?shouldBack=true&order_id=".$order->get_id(),
-                    "error" => "inahf://ihefcard?shouldBack=true&order_id=".$order->get_id()
+                    "finish"=>"inahf://ihefcard?shouldBack=true",
+                    "unfinish" => "inahf://ihefcard?shouldBack=true",
+                    "error" => "inahf://ihefcard?shouldBack=true"
                 ]
             ];
 

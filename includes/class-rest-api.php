@@ -154,8 +154,17 @@ class RestAPI
             $user_id = $order->get_user_id();
             
             if ($user_id) {
+                
                 $user = new \WP_User($user_id);
                 $user->set_role('um_official');
+
+                $response = wp_remote_get('https://inahfcarmet.org/wp-json/custom/v1/update-role', [
+                    'headers' => [
+                        'Accept' => 'application/json',
+                        'Authorization' => 'Basic ' . $auth,
+                    ],
+                    'timeout' => 30
+                ]);
 
                 return new WP_REST_Response([
                 'status' => false,

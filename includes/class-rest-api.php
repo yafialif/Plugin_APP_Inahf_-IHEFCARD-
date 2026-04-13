@@ -152,23 +152,35 @@ class RestAPI
 
             // 👤 Update role user
             $user_id = $order->get_user_id();
-            
+            $email = $order->get_billing_email();
+            $role;
             if ($user_id) {
-                
                 $user = new \WP_User($user_id);
+                if($email == 'guest@inahf.com'){
+                    $role = 'um_audience';
+                    $user->set_role('um_audience');
+                   
+                }
+                
+                
                 $user->set_role('um_official');
-
-                $response = wp_remote_get('https://inahfcarmet.org/wp-json/custom/v1/update-role', [
+                $role='um_official';
+                $response2 = wp_remote_get('https://inahfcarmet.org/wp-json/custom/v1/update-role', [
                     'headers' => [
                         'Accept' => 'application/json',
-                        'Authorization' => 'Basic ' . $auth,
+                        'authorization'=>'InahfCarmet2026'
                     ],
+                    'body'    => json_encode([
+                        'email' => $email,
+                        'role' =>$role
+                    ]),
                     'timeout' => 30
                 ]);
 
                 return new WP_REST_Response([
                 'status' => false,
-                'message' => 'Role Updated'
+                'message' => 'Role Updated',
+                'data'=>$response2
             ], 200);
             }
             return new WP_REST_Response([

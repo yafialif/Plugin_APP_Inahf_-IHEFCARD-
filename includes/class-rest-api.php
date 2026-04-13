@@ -1003,8 +1003,9 @@ class RestAPI
                     // "finish" => "https://ihefcard.inahfcarmet.org/checkout/order-received/".$order_id."/?key=".$order_key,
                     "finish"=>"inahf://payment/success?orderId=".$order_id,
                     "unfinish" => "inahf://package/list",
-                    "error" => "inahf://package/list",
+                    "error" => "inahf://package/list"
                 ]
+
             ];
 
             $snap = \WC_Midtrans_API::createSnapTransactionHandleDuplicate(

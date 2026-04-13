@@ -1003,7 +1003,7 @@ class RestAPI
                     // "finish" => "https://ihefcard.inahfcarmet.org/checkout/order-received/".$order_id."/?key=".$order_key,
                     "finish"=>"inahf://payment/success?orderId=".$order_id,
                     "unfinish" => "/package/list",
-                    "error" => "/package/list"
+                    "error" => "/package/list",
                 ]
             ];
 

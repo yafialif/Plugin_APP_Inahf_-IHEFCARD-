@@ -150,7 +150,8 @@ class RestAPI
 
             // 👤 Update role user
             $user_id = $order->get_user_id();
-            $email = $order->get_billing_email();
+            // $email = $order->get_billing_email();
+            $email = get_userdata($user_id)->user_email ?? null;
  return new WP_REST_Response([
                 'status' => false,
                 'message' => 'data',

@@ -133,7 +133,7 @@ class RestAPI
         //         'payload' => $data
         //     ], 200);
 
-        if ($data['transaction_status'] === 'settlement') {
+        if ($data['transaction_status'] == 'settlement') {
 
 
             // 📦 Ambil order

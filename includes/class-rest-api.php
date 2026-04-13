@@ -126,7 +126,7 @@ class RestAPI
         $data = json_decode($body, true);
         
 
-        if ($data['transaction_status'] == 'settlement') {
+        if ($data['transaction_status'] === 'settlement') {
 
             // 📦 Ambil order
             $order = wc_get_order($order_id);

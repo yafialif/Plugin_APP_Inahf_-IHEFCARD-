@@ -102,8 +102,9 @@ class RestAPI
          // 🔐 Server Key Midtrans (GANTI punyamu)
         $server_key = 'SB-Mid-server-j8HvvpqZ3TY1m0M5xlAyTbJo';
         $request_data  = $request->get_json_params();
+        
         // $order_id      = $data['order_id'] ?? null;
-        $order_id = sanitize_text_field($request_data['order_id']) ?? null;
+        $order_id = sanitize_text_field($request_data['order_id'] ?? null);
 
 
         // 🔗 Endpoint M    idtrans

@@ -910,6 +910,11 @@ class RestAPI
             )
         );
 
+        return [
+                'status' => 'error',
+                'message' => $response
+            ];
+
         // Cek error
         if (is_wp_error($response)) {
             return [

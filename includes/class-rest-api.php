@@ -124,8 +124,9 @@ class RestAPI
 
         $body = wp_remote_retrieve_body($response);
         $data = json_decode($body, true);
+        
 
-        if (isset($data['transaction_status']) && $data['transaction_status'] === 'settlement') {
+        if ($data['transaction_status'] == 'settlement') {
 
             // 📦 Ambil order
             $order = wc_get_order($order_id);

@@ -154,7 +154,7 @@ class RestAPI
             $user_id = $order->get_user_id();
             
             if ($user_id) {
-                $user = new WP_User($user_id);
+                $user = new \WP_User($user_id);
                 $user->set_role('um_official');
 
                 return new WP_REST_Response([

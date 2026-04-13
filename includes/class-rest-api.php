@@ -129,11 +129,18 @@ class RestAPI
 
             // 📦 Ambil order
             $order = wc_get_order($order_id);
-            if (!$order) return;
+            if (!$order){
+                 return new WP_REST_Response([
+                'status' => false,
+                'message' => 'Order Not Found'
+                'payload' => $order_id
+            ], 200);
+            };
 
             // 🔁 Update status order → completed
             if ($order->get_status() !== 'completed') {
                 $order->update_status('completed', 'Payment settlement via Midtrans');
+
             }
 
             // 👤 Update role user
@@ -152,6 +159,12 @@ class RestAPI
                 'status' => false,
                 'message' => 'User Not Found ID :'.$user_id,
                 'payload'=>$order
+            ], 200);
+        }
+        else{
+            return new WP_REST_Response([
+                'status' => false,
+                'message' => 'Updated '
             ], 200);
         }
     }

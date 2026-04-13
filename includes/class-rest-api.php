@@ -138,10 +138,21 @@ class RestAPI
 
             // 👤 Update role user
             $user_id = $order->get_user_id();
+            
             if ($user_id) {
                 $user = new WP_User($user_id);
                 $user->set_role('um_official');
+
+                return new WP_REST_Response([
+                'status' => false,
+                'message' => 'Role Updated'
+            ], 200);
             }
+            return new WP_REST_Response([
+                'status' => false,
+                'message' => 'User Not Found ID :'.$user_id,
+                'payload'=>$order
+            ], 200);
         }
     }
     

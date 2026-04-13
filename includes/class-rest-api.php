@@ -82,14 +82,67 @@ class RestAPI
     ]);
 
 
-     register_rest_route('midtrans/v1', '/webhook', [
+         register_rest_route('midtrans/v1', '/webhook', [
         'methods'  => 'POST',
         'callback' => [$this,'handle_midtrans_webhook'],
         'permission_callback' => '__return_true'
         ]);
 
+        register_rest_route('payment/v1', '/status', [
+        'methods'  => 'POST',
+        'callback' => [$this,'payment_status'],
+        'permission_callback' => '__return_true'
+        ]);
+
         
         
+    }
+
+    public function payment_status(\WP_REST_Request $request){
+         // 🔐 Server Key Midtrans (GANTI punyamu)
+        $server_key = 'SB-Mid-server-j8HvvpqZ3TY1m0M5xlAyTbJo';
+        $data = $request->get_json_params();
+        $order_id      = $data['order_id'] ?? null;
+
+
+        // 🔗 Endpoint M    idtrans
+        $url = "https://api.sandbox.midtrans.com/v2/".$order_id."/status";
+
+        // 🔑 Authorization
+        $auth = base64_encode($server_key . ':');
+
+        // 🚀 Request ke Midtrans
+        $response = wp_remote_get($url, [
+            'headers' => [
+                'Accept' => 'application/json',
+                'Authorization' => 'Basic ' . $auth,
+            ],
+            'timeout' => 30
+        ]);
+
+        if (is_wp_error($response)) return;
+
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+
+        if (isset($data['transaction_status']) && $data['transaction_status'] === 'settlement') {
+
+            // 📦 Ambil order
+            $order = wc_get_order($order_id);
+            if (!$order) return;
+
+            // 🔁 Update status order → completed
+            if ($order->get_status() !== 'completed') {
+                $order->update_status('completed', 'Payment settlement via Midtrans');
+            }
+
+            // 👤 Update role user
+            $user_id = $order->get_user_id();
+            if ($user_id) {
+                $user = new WP_User($user_id);
+                $user->set_role('um_official');
+            }
+        }
     }
     
 

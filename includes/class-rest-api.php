@@ -725,30 +725,89 @@ class RestAPI
             $query = new WP_Query($args);
 
             $items = [];
+            $grouped = [];
+
+            // if ($query->have_posts()) {
+            //     while ($query->have_posts()) {
+
+            //         $query->the_post();
+
+            //         $items[] = [
+            //             "titile" => get_the_title(),
+            //             "description" => wp_strip_all_tags(get_the_content()),
+            //             "youtube_url" => get_post_meta(get_the_ID(), 'ca_video_url', true),
+            //             "post_date" => get_the_date('Y-m-d')
+            //         ];
+            //     }
+            // }
 
             if ($query->have_posts()) {
                 while ($query->have_posts()) {
-
                     $query->the_post();
 
-                    $items[] = [
-                        "titile" => get_the_title(),
-                        "description" => wp_strip_all_tags(get_the_content()),
-                        "youtube_url" => get_post_meta(get_the_ID(), 'ca_video_url', true),
-                        "post_date" => get_the_date('Y-m-d')
-                    ];
+                    // Ambil taxonomy (category default atau custom)
+                    $terms = get_the_terms(get_the_ID(), 'category'); // ganti kalau pakai custom taxonomy
+
+                    if ($terms && !is_wp_error($terms)) {
+                        foreach ($terms as $term) {
+
+                            $tab_title = $term->name;
+
+                            if (!isset($grouped[$tab_title])) {
+                                $grouped[$tab_title] = [];
+                            }
+
+                            $grouped[$tab_title][] = [
+                                "titile" => get_the_title(),
+                                "description" => wp_strip_all_tags(get_the_content()),
+                                "youtube_url" => get_post_meta(get_the_ID(), 'ca_video_url', true),
+                                "post_date" => get_the_date('Y-m-d')
+                            ];
+                        }
+                    } else {
+                        // fallback kalau tidak ada category
+                        $tab_title = "Uncategorized";
+
+                        if (!isset($grouped[$tab_title])) {
+                            $grouped[$tab_title] = [];
+                        }
+
+                        $grouped[$tab_title][] = [
+                            "titile" => get_the_title(),
+                            "description" => wp_strip_all_tags(get_the_content()),
+                            "youtube_url" => get_post_meta(get_the_ID(), 'ca_video_url', true),
+                            "post_date" => get_the_date('Y-m-d')
+                        ];
+                    }
                 }
             }
 
             wp_reset_postdata();
 
+            // return [
+            //     "data" => [
+            //         "page_title" => "Recording",
+            //         "page_content" => $items
+            //     ]
+            // ];
+             // Format ke structure final
+            $page_content = [];
+
+            foreach ($grouped as $tab_title => $items) {
+                $page_content[] = [
+                    "tab_title" => $tab_title,
+                    "tab_content" => $items
+                ];
+            }
+
             return [
                 "data" => [
                     "page_title" => "Recording",
-                    "page_content" => $items
+                    "page_content" => $page_content
                 ]
             ];
         }
+
 
     public function check_status_order($request)
     {

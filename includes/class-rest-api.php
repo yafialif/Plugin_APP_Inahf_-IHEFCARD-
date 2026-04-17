@@ -180,7 +180,8 @@ class RestAPI
 
             error_log('PAYLOAD: ' . print_r($payload, true));
 
-            $response2 = wp_remote_post('https://inahfcarmet.org/wp-json/custom/v1/update-role', [
+            $response2 = wp_remote_request('https://inahfcarmet.org/wp-json/custom/v1/update-role', [
+                'method' => 'POST',
                 'headers' => [
                     // 'Accept' => 'application/json',
                     'authorization'=>'InahfCarmet2026',

@@ -165,11 +165,7 @@ class RestAPI
                     $role = 'um_official';
                 }
 
-            return new WP_REST_Response([
-                'status' => false,
-                'message' => 'data',
-                'payload' => $role
-            ], 200);
+        
             error_log('ROLE BEFORE SEND: ' . $role);
 
             if (!empty($user_id)) {

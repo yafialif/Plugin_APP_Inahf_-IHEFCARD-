@@ -157,8 +157,8 @@ class RestAPI
                 'message' => 'data',
                 'payload' => $email
             ], 200);
-            $role;
-            if ($user_id) {
+            $role="um_guest";
+            if ($email) {
                 $user = new \WP_User($user_id);
                 if ($email == 'guest@inahf.com') {
                     $role = 'um_audience';

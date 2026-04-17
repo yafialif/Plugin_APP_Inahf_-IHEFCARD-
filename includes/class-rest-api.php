@@ -152,11 +152,11 @@ class RestAPI
             $user_id = $order->get_user_id();
             // $email = $order->get_billing_email();
             $email = get_userdata($user_id)->user_email ?? null;
- return new WP_REST_Response([
-                'status' => false,
-                'message' => 'data',
-                'payload' => $email
-            ], 200);
+//  return new WP_REST_Response([
+//                 'status' => false,
+//                 'message' => 'data',
+//                 'payload' => $email
+//             ], 200);
             $role="um_guest";
             if ($email) {
                 $user = new \WP_User($user_id);
@@ -180,7 +180,7 @@ class RestAPI
             ];
             return new WP_REST_Response([
                 'status' => false,
-                'message' => 'data role',
+                'message' => 'data',
                 'payload' => $role
             ], 200);
 

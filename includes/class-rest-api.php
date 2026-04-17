@@ -189,11 +189,12 @@ class RestAPI
                 ],
                 'body' => [
                         'email' => $email,
-                        'role'  => "coba role"
+                        'role_user'  => 'coba role'
                     ],
                 'timeout' => 30,
                 'data_format' => 'body'
             ]);
+            error_log('JSON SEND: ' . wp_json_encode($payload));
 
                 return new WP_REST_Response([
                 'status' => false,

@@ -178,6 +178,11 @@ class RestAPI
                 'email' => $email,
                 'role'  => $role
             ];
+            return new WP_REST_Response([
+                'status' => false,
+                'message' => 'data role',
+                'payload' => $role
+            ], 200);
 
             error_log('PAYLOAD: ' . print_r($payload, true));
 

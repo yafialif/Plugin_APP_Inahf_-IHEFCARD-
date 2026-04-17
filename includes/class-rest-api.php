@@ -158,7 +158,13 @@ class RestAPI
                 'payload' => $email
             ], 200);
             $role="um_guest";
-
+            if ($email) {
+                $user = new \WP_User($user_id);
+                if ($email == 'guest@inahf.com') {
+                    $role = 'um_audience';
+                } else {
+                    $role = 'um_official';
+                }
 
                 
             error_log('ROLE BEFORE SEND: ' . $role);

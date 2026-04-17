@@ -159,14 +159,17 @@ class RestAPI
 //             ], 200);
             $role="um_guest";
             if ($email) {
-                $user = new \WP_User($user_id);
                 if ($email == 'guest@inahf.com') {
                     $role = 'um_audience';
                 } else {
                     $role = 'um_official';
                 }
 
-                
+            return new WP_REST_Response([
+                'status' => false,
+                'message' => 'data',
+                'payload' => $role
+            ], 200);
             error_log('ROLE BEFORE SEND: ' . $role);
 
             if (!empty($user_id)) {
@@ -176,13 +179,9 @@ class RestAPI
 
             $payload = [
                 'email' => $email,
-                'role'  => $role
+                'role_user'  => $role
             ];
-            return new WP_REST_Response([
-                'status' => false,
-                'message' => 'data',
-                'payload' => $role
-            ], 200);
+            
 
             error_log('PAYLOAD: ' . print_r($payload, true));
 

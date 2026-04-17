@@ -187,7 +187,10 @@ class RestAPI
                     'authorization'=>'InahfCarmet2026',
                     'Content-Type' => 'application/json'
                 ],
-                'body' => wp_json_encode($payload),
+                'body' => [
+                        'email' => $email,
+                        'role'  => $role
+                    ],,
                 'timeout' => 30,
                 'data_format' => 'body'
             ]);

@@ -183,9 +183,9 @@ class RestAPI
 
             $response2 = wp_remote_post('https://inahfcarmet.org/wp-json/custom/v1/update-role', [
                 'headers' => [
-                    'Accept' => 'application/json',
+                    // 'Accept' => 'application/json',
                     'authorization'=>'InahfCarmet2026',
-                    'Content-Type' => 'application/json'
+                    // 'Content-Type' => 'application/json'
                 ],
                 'body' => [
                         'email' => $email,

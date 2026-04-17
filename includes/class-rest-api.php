@@ -152,13 +152,9 @@ class RestAPI
             $user_id = $order->get_user_id();
             // $email = $order->get_billing_email();
             $email = get_userdata($user_id)->user_email ?? null;
-//  return new WP_REST_Response([
-//                 'status' => false,
-//                 'message' => 'data',
-//                 'payload' => $email
-//             ], 200);
+
             $role="um_guest";
-            if ($email) {
+            if (!empty($user_id)) {
                 if ($email == 'guest@inahf.com') {
                     $role = 'um_audience';
                 } else {
@@ -166,7 +162,7 @@ class RestAPI
                 }
 
         
-            error_log('ROLE BEFORE SEND: ' . $role);
+            // error_log('ROLE BEFORE SEND: ' . $role);
 
             if (!empty($user_id)) {
                 $user = new \WP_User($user_id);
@@ -178,7 +174,7 @@ class RestAPI
             ];
             
 
-            error_log('PAYLOAD: ' . print_r($payload, true));
+            // error_log('PAYLOAD: ' . print_r($payload, true));
 
             $response2 = wp_remote_request('https://inahfcarmet.org/wp-json/custom/v1/update-role', [
                 'method' => 'POST',
@@ -191,7 +187,7 @@ class RestAPI
                 'timeout' => 30,
                 'data_format' => 'body'
             ]);
-            error_log('JSON SEND: ' . wp_json_encode($payload));
+            // error_log('JSON SEND: ' . wp_json_encode($payload));
 
                 return new WP_REST_Response([
                 'status' => false,

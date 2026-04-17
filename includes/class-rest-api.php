@@ -190,7 +190,7 @@ class RestAPI
                 'body' => [
                         'email' => $email,
                         'role'  => $role
-                    ],,
+                    ],
                 'timeout' => 30,
                 'data_format' => 'body'
             ]);

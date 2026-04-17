@@ -174,8 +174,7 @@ class RestAPI
             }
 
             $payload = [
-                'email' => $email,
-                'role_user'  => $role
+                'email_role' => $email . '|' . $role
             ];
             
 
@@ -187,10 +186,7 @@ class RestAPI
                     'authorization'=>'InahfCarmet2026',
                     // 'Content-Type' => 'application/json'
                 ],
-                'body' => [
-                        'email' => $email,
-                        'role_user'  => 'coba role'
-                    ],
+                'body' => $payload,
                 'timeout' => 30,
                 'data_format' => 'body'
             ]);

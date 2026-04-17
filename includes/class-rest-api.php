@@ -158,28 +158,33 @@ class RestAPI
                 'payload' => $email
             ], 200);
             $role="um_guest";
-            if ($email) {
-                $user = new \WP_User($user_id);
-                if ($email == 'guest@inahf.com') {
-                    $role = 'um_audience';
-                } else {
-                    $role = 'um_official';
-                }
 
+
+                
+            error_log('ROLE BEFORE SEND: ' . $role);
+
+            if (!empty($user_id)) {
+                $user = new \WP_User($user_id);
                 $user->set_role($role);
-                $response2 = wp_remote_post('https://inahfcarmet.org/wp-json/custom/v1/update-role', [
-                    'headers' => [
-                        'Accept' => 'application/json',
-                        'authorization'=>'InahfCarmet2026',
-                        'Content-Type' => 'application/json'
-                    ],
-                        'body' => wp_json_encode([
-                            'email' => $email,
-                            'role'  => $role
-                        ]),
-                        'timeout' => 30,
-                        'data_format' => 'body'
-                ]);
+            }
+
+            $payload = [
+                'email' => $email,
+                'role'  => $role
+            ];
+
+            error_log('PAYLOAD: ' . print_r($payload, true));
+
+            $response2 = wp_remote_post('https://inahfcarmet.org/wp-json/custom/v1/update-role', [
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'authorization'=>'InahfCarmet2026',
+                    'Content-Type' => 'application/json'
+                ],
+                'body' => wp_json_encode($payload),
+                'timeout' => 30,
+                'data_format' => 'body'
+            ]);
 
                 return new WP_REST_Response([
                 'status' => false,

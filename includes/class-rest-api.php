@@ -192,7 +192,8 @@ class RestAPI
                 return new WP_REST_Response([
                 'status' => false,
                 'message' => 'Role Updated',
-                'data'=>$response2
+                'data'=>$response2,
+                'order_status'=>$order->get_status()
             ], 200);
             }
             return new WP_REST_Response([

@@ -242,24 +242,23 @@ class RestAPI
                 $user->set_role($role);
             }
 
-            $payload = [
-                'email_role' => $email . '|' . $role
+           $payload = [
+            'email'=>$email,
+            'role'=>$role
             ];
-            
 
-            error_log('PAYLOAD: ' . print_r($payload, true));
+            $response2 = wp_remote_post(
+                'https://inahfcarmet.org/wp-json/custom/v1/update-role',
+                [
+                    'headers'=>[
+                        'authorization'=>'InahfCarmet2026',
+                        'Content-Type'=>'application/json'
+                    ],
+                    'body'=>wp_json_encode($payload),
+                    'timeout'=>30
+                ]
+            );
 
-            $response2 = wp_remote_request('https://inahfcarmet.org/wp-json/custom/v1/update-role', [
-                'method' => 'POST',
-                'headers' => [
-                    // 'Accept' => 'application/json',
-                    'authorization'=>'InahfCarmet2026',
-                    // 'Content-Type' => 'application/json'
-                ],
-                'body' => $payload,
-                'timeout' => 30,
-                'data_format' => 'body'
-            ]);
 
             
             // error_log('JSON SEND: ' . wp_json_encode($payload));

@@ -198,10 +198,10 @@ class RestAPI
             // error_log('JSON SEND: ' . wp_json_encode($payload));
 
                 return new WP_REST_Response([
-                'status' => false,
+                'status' => true,
                 'message' => 'Role Updated',
                 // 'data'=>$response2,
-                'payload'=>$response2
+                // 'payload'=>$response2
             ], 200);
             }
             return new WP_REST_Response([

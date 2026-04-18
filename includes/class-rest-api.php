@@ -164,14 +164,14 @@ class RestAPI
         
             // error_log('ROLE BEFORE SEND: ' . $role);
 
-            if (!empty($user_id)) {
-                $user = new \WP_User($user_id);
-                $user->set_role($role);
-            }
+            // if (!empty($user_id)) {
+            //     $user = new \WP_User($user_id);
+            //     $user->set_role($role);
+            // }
 
-            $payload = [
-                'email_role' => $email . '|' . $role
-            ];
+            // $payload = [
+            //     'email_role' => $email . '|' . $role
+            // ];
             
 
             // error_log('PAYLOAD: ' . print_r($payload, true));

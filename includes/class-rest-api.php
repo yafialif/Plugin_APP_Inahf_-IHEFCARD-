@@ -105,9 +105,16 @@ class RestAPI
         
     }
 
-    public function payment_status(\WP_REST_Request $request){
+    public function role_update(\WP_REST_Request $request){
 
         $request_data  = $request->get_json_params();
+        $auth = $request->get_header('authorization');
+        if ($auth !== 'InahfCarmet2026') {
+            return new WP_REST_Response([
+                'success' => false,
+                'message' => 'Unauthorized'
+            ], 401);
+        }
         $email = sanitize_text_field($request['email'] ?? null);
         $user = get_user_by('email', $email);
         $role = 'um_guest';

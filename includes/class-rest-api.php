@@ -122,7 +122,13 @@ class RestAPI
             'timeout' => 30
         ]);
 
-        // if (is_wp_error($response)) return;
+        if (is_wp_error($response)){
+              return new WP_REST_Response([
+                'status' => false,
+                'message' => 'Error Midtrans',
+                'payload' => $response
+              ]);
+        };
 
         $body = wp_remote_retrieve_body($response);
         $data = json_decode($body, true);
@@ -164,29 +170,29 @@ class RestAPI
         
             // error_log('ROLE BEFORE SEND: ' . $role);
 
-            // if (!empty($user_id)) {
-            //     $user = new \WP_User($user_id);
-            //     $user->set_role($role);
-            // }
+            if (!empty($user_id)) {
+                $user = new \WP_User($user_id);
+                $user->set_role($role);
+            }
 
-            // $payload = [
-            //     'email_role' => $email . '|' . $role
-            // ];
+            $payload = [
+                'email_role' => $email . '|' . $role
+            ];
             
 
-            // error_log('PAYLOAD: ' . print_r($payload, true));
+            error_log('PAYLOAD: ' . print_r($payload, true));
 
-            // $response2 = wp_remote_request('https://inahfcarmet.org/wp-json/custom/v1/update-role', [
-            //     'method' => 'POST',
-            //     'headers' => [
-            //         // 'Accept' => 'application/json',
-            //         'authorization'=>'InahfCarmet2026',
-            //         // 'Content-Type' => 'application/json'
-            //     ],
-            //     'body' => $payload,
-            //     'timeout' => 30,
-            //     'data_format' => 'body'
-            // ]);
+            $response2 = wp_remote_request('https://inahfcarmet.org/wp-json/custom/v1/update-role', [
+                'method' => 'POST',
+                'headers' => [
+                    // 'Accept' => 'application/json',
+                    'authorization'=>'InahfCarmet2026',
+                    // 'Content-Type' => 'application/json'
+                ],
+                'body' => $payload,
+                'timeout' => 30,
+                'data_format' => 'body'
+            ]);
 
             
             // error_log('JSON SEND: ' . wp_json_encode($payload));

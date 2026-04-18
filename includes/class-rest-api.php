@@ -136,9 +136,9 @@ class RestAPI
                 'method' => 'POST',
                 'headers' => [
                     'authorization'=>'InahfCarmet2026',
-                    // 'Content-Type' => 'application/json'
+                    'Content-Type' => 'application/json'
                 ],
-                'body' => $payload,
+                'body' => wp_json_encode($payload) ,
                 'timeout' => 30,
                 'data_format' => 'body'
             ]);

@@ -176,23 +176,50 @@ class RestAPI
 
             // error_log('PAYLOAD: ' . print_r($payload, true));
 
-            $response2 = wp_remote_request('https://inahfcarmet.org/wp-json/custom/v1/update-role', [
-                'method' => 'POST',
-                'headers' => [
-                    // 'Accept' => 'application/json',
-                    'authorization'=>'InahfCarmet2026',
-                    // 'Content-Type' => 'application/json'
-                ],
-                'body' => $payload,
-                'timeout' => 30,
-                'data_format' => 'body'
+            // $response2 = wp_remote_request('https://inahfcarmet.org/wp-json/custom/v1/update-role', [
+            //     'method' => 'POST',
+            //     'headers' => [
+            //         // 'Accept' => 'application/json',
+            //         'authorization'=>'InahfCarmet2026',
+            //         // 'Content-Type' => 'application/json'
+            //     ],
+            //     'body' => $payload,
+            //     'timeout' => 30,
+            //     'data_format' => 'body'
+            // ]);
+
+            $url = 'https://inahfcarmet.org/wp-json/custom/v1/update-role';
+
+            $postData = [
+                'email'      => 'yafialif01@gmail.com',
+                'role'       => 'inirole',
+                'email_role' => 'emailinrols'
+            ];
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Authorization: InahfCarmet2026',
+                'Content-Type: application/x-www-form-urlencoded'
             ]);
+
+            $response3 = curl_exec($ch);
+
+            if (curl_errno($ch)) {
+                echo 'Error CURL: ' . curl_error($ch);
+            }
+
+            curl_close($ch);
             // error_log('JSON SEND: ' . wp_json_encode($payload));
 
                 return new WP_REST_Response([
                 'status' => false,
                 'message' => 'Role Updated',
-                'data'=>$response2,
+                'data'=>$response3,
                 'order_status'=>$order
             ], 200);
             }

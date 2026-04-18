@@ -122,7 +122,7 @@ class RestAPI
             'timeout' => 30
         ]);
 
-        if (is_wp_error($response)) return;
+        // if (is_wp_error($response)) return;
 
         $body = wp_remote_retrieve_body($response);
         $data = json_decode($body, true);
@@ -144,7 +144,7 @@ class RestAPI
 
             // 🔁 Update status order → completed
             if ($order->get_status() !== 'completed') {
-                $order->update_status('completed', 'Payment settlement via Midtrans');
+                // $order->update_status('completed', 'Payment settlement via Midtrans');
 
             }
 

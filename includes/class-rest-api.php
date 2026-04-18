@@ -105,53 +105,65 @@ class RestAPI
         
     }
 
-    public function role_update(\WP_REST_Request $request){
+   public function role_update(\WP_REST_Request $request){
 
-        $request_data  = $request->get_json_params();
         $auth = $request->get_header('authorization');
+
         if ($auth !== 'InahfCarmet2026') {
             return new WP_REST_Response([
-                'success' => false,
-                'message' => 'Unauthorized'
-            ], 401);
+                'success'=>false,
+                'message'=>'Unauthorized'
+            ],401);
         }
-        $email = sanitize_text_field($request['email'] ?? null);
-        $user = get_user_by('email', $email);
+
+        $request_data = $request->get_json_params();
+
+        $email = sanitize_email($request_data['email'] ?? null);
+
+        if (!$email) {
+            return new WP_REST_Response([
+                'success'=>false,
+                'message'=>'Email required'
+            ],400);
+        }
+
         $role = 'um_guest';
+
+        $user = get_user_by('email',$email);
+
         if ($user) {
-            $user_id = $user->ID;
+            $wp_user = new \WP_User($user->ID);
+            $wp_user->set_role($role);
         }
-        if (!empty($user_id)) {
-                $user = new \WP_User($user_id);
-                $user->set_role($role);
-            }
 
         $payload = [
-                'email' => $email,
-                'role' => $role
-            ];
-            
+            'email'=>$email,
+            'role'=>$role
+        ];
 
-            $response2 = wp_remote_request('https://inahfcarmet.org/wp-json/custom/v1/update-role', [
-                'method' => 'POST',
-                'headers' => [
+        $response2 = wp_remote_post(
+            'https://inahfcarmet.org/wp-json/custom/v1/update-role',
+            [
+                'headers'=>[
                     'authorization'=>'InahfCarmet2026',
-                    'Content-Type' => 'application/json'
+                    'Content-Type'=>'application/json'
                 ],
-                'body' => wp_json_encode($payload) ,
-                'timeout' => 30,
-                'data_format' => 'body'
-            ]);
+                'body'=>wp_json_encode($payload),
+                'timeout'=>30
+            ]
+        );
+
+        if (is_wp_error($response2)) {
             return new WP_REST_Response([
-                'status' => true,
-                'message' => 'Role Updated',
-                'data'=>$response2,
-                // 'payload'=>$response2
-            ], 200);
+                'success'=>false,
+                'message'=>$response2->get_error_message()
+            ],500);
+        }
 
-
-
-
+        return new WP_REST_Response([
+            'success'=>true,
+            'message'=>'Role Updated'
+        ],200);
     }
 
     public function payment_status(\WP_REST_Request $request){

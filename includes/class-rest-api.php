@@ -832,7 +832,7 @@ class RestAPI
                                     "icon": "https://inahfcarmet.org/wp-content/uploads/2026/04/icon_recording.png",
                                     "name": "Recording",
                                     "type": "recording",
-                                    "route_url": "/recording/list"
+                                    "route_url": "/recording/list?type=ihefcard"
                                 },
                                 {
                                     "icon": "https://inahfcarmet.org/wp-content/uploads/2026/04/icon_speaker.png",

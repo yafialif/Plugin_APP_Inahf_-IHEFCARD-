@@ -811,19 +811,19 @@ class RestAPI
                         "row_item_count": 4,
                         "menus": [
                                 {
-                                    "icon": "hhttps://inahfcarmet.org/wp-content/uploads/2026/04/icon_inahf.png",
+                                    "icon": "https://inahfcarmet.org/wp-content/uploads/2026/04/icon_inahf.png",
                                     "name": "InaHF",
                                     "type": "inahf",
                                     "route_url": "/"
                                 },
                                 {
-                                    "icon": "https://inahfcarmet.org/wp-content/uploads/2026/04/icon_speaker.png",
+                                    "icon": "https://inahfcarmet.org/wp-content/uploads/2026/04/icon_comitte.png",
                                     "name": "Committee",
                                     "type": "webview",
                                     "route_url": "https://ihefcard.com/committee"
                                 },
                                 {
-                                    "icon": "https://www.google.com",
+                                    "icon": "https://inahfcarmet.org/wp-content/uploads/2026/04/icon.png",
                                     "name": "Package",
                                     "type": "package",
                                     "route_url": "/package/list"

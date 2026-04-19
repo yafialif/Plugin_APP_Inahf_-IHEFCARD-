@@ -811,13 +811,13 @@ class RestAPI
                         "row_item_count": 4,
                         "menus": [
                                 {
-                                    "icon": "https://www.google.com",
+                                    "icon": "hhttps://inahfcarmet.org/wp-content/uploads/2026/04/icon_inahf.png",
                                     "name": "InaHF",
                                     "type": "inahf",
                                     "route_url": "/"
                                 },
                                 {
-                                    "icon": "https://www.google.com",
+                                    "icon": "https://inahfcarmet.org/wp-content/uploads/2026/04/icon_speaker.png",
                                     "name": "Committee",
                                     "type": "webview",
                                     "route_url": "https://ihefcard.com/committee"
@@ -829,19 +829,19 @@ class RestAPI
                                     "route_url": "/package/list"
                                 },
                                 {
-                                    "icon": "https://www.google.com",
+                                    "icon": "https://inahfcarmet.org/wp-content/uploads/2026/04/icon_recording.png",
                                     "name": "Recording",
                                     "type": "recording",
                                     "route_url": "/recording/list"
                                 },
                                 {
-                                    "icon": "https://www.google.com",
+                                    "icon": "https://inahfcarmet.org/wp-content/uploads/2026/04/icon_speaker.png",
                                     "name": "Speakers",
                                     "type": "speakers",
                                     "route_url": "/speaker/list"
                                 },
                                 {
-                                    "icon": "https://www.google.com",
+                                    "icon": "https://inahfcarmet.org/wp-content/uploads/2026/04/unnamed-removebg-preview.png",
                                     "name": "Satu Sehat",
                                     "type": "webview",
                                     "route_url": "https://lms.kemkes.go.id/"

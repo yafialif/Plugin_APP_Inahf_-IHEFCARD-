@@ -850,7 +850,7 @@ class RestAPI
                                     "icon": "https://cdn-icons-png.freepik.com/512/5962/5962463.png",
                                     "name": "Chat",
                                     "type": "webview",
-                                    "route_url": "https://tawk.to/chat/69ee557eabfa8b1c36eaabce/1jn5frui6"
+                                    "route_url": "https://ihefcard.inahfcarmet.org/live-chat/"
                                 }
                                 
                             ]

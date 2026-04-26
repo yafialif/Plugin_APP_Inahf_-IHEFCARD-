@@ -845,7 +845,14 @@ class RestAPI
                                     "name": "Satu Sehat",
                                     "type": "webview",
                                     "route_url": "https://lms.kemkes.go.id/"
+                                },
+                                {
+                                    "icon": "https://cdn-icons-png.freepik.com/512/5962/5962463.png",
+                                    "name": "Chat",
+                                    "type": "webview",
+                                    "route_url": "https://tawk.to/chat/69ee557eabfa8b1c36eaabce/1jn5frui6"
                                 }
+                                
                             ]
                     }
                 },

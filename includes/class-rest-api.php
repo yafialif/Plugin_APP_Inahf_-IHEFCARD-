@@ -810,7 +810,7 @@ class RestAPI
                     "type": "footer_banner",
                     "payload": [
                         {
-                            "title": "Don't miss the event",
+                            "title": "Dont miss the event",
                             "color": "GRADIENT_PURPLE",
                             "right_widget": {
                                 "type": "button",

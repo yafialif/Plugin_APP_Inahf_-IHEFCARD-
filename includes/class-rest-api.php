@@ -807,6 +807,27 @@ class RestAPI
                     }
                 },
                 {
+                    "type": "footer_banner",
+                    "payload": [
+                        {
+                            "title": "Don't miss the event",
+                            "color": "GRADIENT_PURPLE",
+                            "right_widget": {
+                                "type": "button",
+                                "payload": "/signin"
+                            }
+                        },
+                        {
+                            "title": "THE 6th i-HEFCARD 2026 begins in",
+                            "color": "GRADIENT_BLUE",
+                            "right_widget": {
+                                "type": "countdown",
+                                "payload": "30-12-2027"
+                            }
+                        }
+                    ]
+                },
+                {
                     "type": "section_menu",
                     "payload": {
                         "row_item_count": 4,

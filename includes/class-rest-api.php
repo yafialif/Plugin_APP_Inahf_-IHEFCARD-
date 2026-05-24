@@ -811,7 +811,7 @@ class RestAPI
                     "payload": [
                         {
                             "title": "Dont miss the event",
-                            "color": "GRADIENT_PURPLE",
+                            "color": "GradientPurple",
                             "right_widget": {
                                 "type": "button",
                                 "payload": "/signin"
@@ -819,7 +819,7 @@ class RestAPI
                         },
                         {
                             "title": "THE 6th i-HEFCARD 2026 begins in",
-                            "color": "GRADIENT_BLUE",
+                            "color": "GradientBlue",
                             "right_widget": {
                                 "type": "countdown",
                                 "payload": "30-12-2027"
